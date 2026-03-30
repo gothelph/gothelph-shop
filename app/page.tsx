@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { useMemo, useState } from "react";
 
 const navItems = [
   { href: "#catalog", label: "каталог" },
@@ -9,20 +6,7 @@ const navItems = [
   { href: "#about", label: "о бренде" },
 ];
 
-const cartItems = [
-  { id: 1, title: "GOTHELPH Hoodie", size: "L", qty: 1, price: 5900 },
-  { id: 2, title: "GOTHELPH T-Shirt", size: "M", qty: 2, price: 2900 },
-];
-
 export default function Home() {
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-
-  const cartTotal = useMemo(
-    () => cartItems.reduce((acc, item) => acc + item.price * item.qty, 0),
-    [],
-  );
-
   return (
     <div className="min-h-screen bg-neutral-100 text-neutral-900">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 pt-8 md:px-10">
@@ -43,34 +27,17 @@ export default function Home() {
           <p className="text-7xl tracking-wide">GOTHELPH</p>
         </div>
 
-        <div className="flex items-center gap-4">
-          <nav className="hidden gap-8 text-3xl font-medium xl:flex">
-            {navItems.map((item) => (
-              <Link
-                key={`right-${item.href}`}
-                href={item.href}
-                className="transition hover:opacity-60"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          <button
-            type="button"
-            onClick={() => setIsRegisterOpen(true)}
-            className="rounded border border-neutral-300 bg-white px-4 py-2 text-lg transition hover:bg-neutral-200"
-          >
-            регистрация
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsCartOpen(true)}
-            className="rounded border border-neutral-300 bg-white px-4 py-2 text-lg transition hover:bg-neutral-200"
-          >
-            корзина
-          </button>
-        </div>
+        <nav className="hidden gap-8 text-3xl font-medium md:flex">
+          {navItems.map((item) => (
+            <Link
+              key={`right-${item.href}`}
+              href={item.href}
+              className="transition hover:opacity-60"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
       </header>
 
       <section className="mx-auto mt-10 max-w-6xl px-6 md:px-10">
