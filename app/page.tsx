@@ -75,6 +75,91 @@ export default function Home() {
           </p>
         </section>
       </main>
+
+      {isRegisterOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-2xl font-semibold">Регистрация</h3>
+              <button
+                type="button"
+                onClick={() => setIsRegisterOpen(false)}
+                className="text-2xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+            <form className="space-y-3">
+              <input
+                className="w-full rounded border border-neutral-300 px-3 py-2"
+                type="text"
+                placeholder="Username"
+              />
+              <input
+                className="w-full rounded border border-neutral-300 px-3 py-2"
+                type="email"
+                placeholder="Email"
+              />
+              <input
+                className="w-full rounded border border-neutral-300 px-3 py-2"
+                type="password"
+                placeholder="Password"
+              />
+              <button
+                type="button"
+                className="w-full rounded bg-neutral-900 px-4 py-2 text-white transition hover:bg-neutral-700"
+              >
+                Создать аккаунт
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {isCartOpen && (
+        <div className="fixed inset-0 z-50 bg-black/40">
+          <aside className="ml-auto flex h-full w-full max-w-md flex-col bg-white p-6 shadow-2xl">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-2xl font-semibold">Корзина</h3>
+              <button
+                type="button"
+                onClick={() => setIsCartOpen(false)}
+                className="text-2xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="flex-1 space-y-3 overflow-auto">
+              {cartItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="rounded border border-neutral-200 p-3 text-sm"
+                >
+                  <p className="font-medium">{item.title}</p>
+                  <p className="text-neutral-600">
+                    Размер: {item.size} · Кол-во: {item.qty}
+                  </p>
+                  <p className="mt-1 font-semibold">{item.price} ₽</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 border-t border-neutral-200 pt-4">
+              <p className="mb-3 flex items-center justify-between text-lg font-semibold">
+                <span>Итого:</span>
+                <span>{cartTotal} ₽</span>
+              </p>
+              <button
+                type="button"
+                className="w-full rounded bg-neutral-900 px-4 py-2 text-white transition hover:bg-neutral-700"
+              >
+                Оформить заказ
+              </button>
+            </div>
+          </aside>
+        </div>
+      )}
     </div>
   );
 }
