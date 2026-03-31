@@ -1,16 +1,22 @@
-import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import pool from "@/lib/db";
+import { errorResponse, okResponse } from "@/lib/utils/api-response";
+import { validateRegisterPayload } from "@/lib/utils/auth-validation";
 
 export async function POST(req: Request) {
-  const { username, email, password } = await req.json();
+  const body = await req.json();
+  const parsed = validateRegisterPayload(body);
 
-  if (!username || !email || !password) {
-    return NextResponse.json(
-      { error: "Missing required fields" },
-      { status: 400 },
-    );
+  if (!parsed.valid) {
+    return errorResponse({
+      status: 400,
+      code: "VALIDATION_ERROR",
+      message: "Invalid registration payload",
+      details: parsed.details,
+    });
   }
+
+  const { username, email, password } = parsed.data;
 
   const hash = await bcrypt.hash(password, 10);
 
@@ -37,15 +43,16 @@ export async function POST(req: Request) {
 
     await client.query("COMMIT"); // подтверждаем транзакцию
 
-    return NextResponse.json(result.rows[0], { status: 201 });
+    return okResponse(result.rows[0], 201);
   } catch (error) {
     await client.query("ROLLBACK"); // откатываем изменения при ошибке
     console.error("Registration error:", error); // логируем на сервер
 
-    return NextResponse.json(
-      { error: "Registration failed" }, // клиенту не отдаём сырые ошибки БД
-      { status: 400 },
-    );
+    return errorResponse({
+      status: 400,
+      code: "REGISTRATION_FAILED",
+      message: "Registration failed",
+    });
   } finally {
     client.release(); // обязательно освобождаем соединение
   }
