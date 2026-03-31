@@ -1,0 +1,68 @@
+.section {
+  max-width: 72rem;
+  margin: 2rem auto;
+  padding: 0 1rem 2rem;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+
+.collectionCard {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #ffffff;
+}
+
+.collectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.collectionDescription {
+  color: #4b5563;
+  margin: 0.35rem 0 0.8rem;
+}
+
+.subcollection {
+  border-top: 1px solid #f3f4f6;
+  padding-top: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.subcollectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.itemsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.itemCard {
+  border: 1px solid #f3f4f6;
+  border-radius: 0.5rem;
+  padding: 0.65rem;
+  background: #fafafa;
+}
+
+.itemName {
+  font-weight: 500;
+}
+
+.itemMeta {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.itemPrice {
+  margin-top: 0.35rem;
+  font-weight: 600;
+}
