@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     const refreshTokenHash = hashToken(refreshToken);
     const sessionResult = await client.query<{ id: string }>(
       `SELECT id
-       FROM gothelph.user_sessions
+       FROM user_sessions
        WHERE user_id = $1
          AND refresh_token_hash = $2
          AND revoked_at IS NULL
@@ -65,8 +65,8 @@ export async function POST(req: Request) {
          array_agg(r.name) FILTER (WHERE r.name IS NOT NULL),
          '{}'
        ) AS roles
-       FROM gothelph.user_roles ur
-       LEFT JOIN gothelph.roles r ON r.id = ur.role_id
+       FROM user_roles ur
+       LEFT JOIN roles r ON r.id = ur.role_id
        WHERE ur.user_id = $1`,
       [payload.userId],
     );
@@ -79,13 +79,13 @@ export async function POST(req: Request) {
 
     await client.query("BEGIN");
     await client.query(
-      `UPDATE gothelph.user_sessions
+      `UPDATE user_sessions
        SET revoked_at = NOW()
        WHERE id = $1`,
       [session.id],
     );
     await client.query(
-      `INSERT INTO gothelph.user_sessions (
+      `INSERT INTO user_sessions (
          user_id,
          refresh_token_hash,
          user_agent,
