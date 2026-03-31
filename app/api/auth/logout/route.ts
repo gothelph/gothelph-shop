@@ -13,7 +13,7 @@ export async function POST() {
   if (refreshToken) {
     const refreshTokenHash = hashToken(refreshToken);
     await pool.query(
-      `UPDATE gothelph.user_sessions
+      `UPDATE user_sessions
        SET revoked_at = NOW()
        WHERE refresh_token_hash = $1
          AND revoked_at IS NULL`,

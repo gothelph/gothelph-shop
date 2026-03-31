@@ -29,9 +29,9 @@ export async function POST(req: Request) {
                 array_agg(r.name) FILTER (WHERE r.name IS NOT NULL),
                 '{}'
               ) AS roles
-       FROM gothelph.users u
-       LEFT JOIN gothelph.user_roles ur ON ur.user_id = u.id
-       LEFT JOIN gothelph.roles r ON r.id = ur.role_id
+       FROM users u
+       LEFT JOIN user_roles ur ON ur.user_id = u.id
+       LEFT JOIN roles r ON r.id = ur.role_id
        WHERE u.email = $1
        GROUP BY u.id`,
       [email],
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
     const ipAddress = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
 
     await pool.query(
-      `INSERT INTO gothelph.user_sessions (
+      `INSERT INTO user_sessions (
          user_id,
          refresh_token_hash,
          user_agent,

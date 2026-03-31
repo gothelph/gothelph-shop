@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import Header from "@/components/Header";
 import CartDrawer from "@/components/CartDrawer";
 import AuthModal from "@/components/AuthModal";
 import Collections from "@/components/Collections";
 import { Collection } from "@/types/collection";
+import { useAuth } from "@/hooks/useAuth";
 
 type CollectionsApiPayload = {
   data?: Collection[];
@@ -24,38 +25,78 @@ export default function Home() {
     { id: 1, title: "Hoodie", size: "L", qty: 1, price: 5900 },
   ]);
 
-  useEffect(() => {
-    const loadCollections = async () => {
-      try {
-        const response = await fetch("/api/collections");
-        const payload = (await response.json()) as CollectionsApiPayload;
+  const { isAuth, roles, message, clearMessage, login, register, logout, accessToken } =
+    useAuth();
 
-        if (!response.ok) {
-          setCollectionsError(
-            payload.error || "Не удалось загрузить коллекции из БД.",
-          );
-          return;
-        }
+  const isAdmin = roles.includes("admin");
 
-        if (payload.data?.length) {
-          setCollections(payload.data);
-          setCollectionsError("");
-        } else {
-          setCollectionsError("БД вернула пустой список коллекций.");
-        }
-      } catch (error) {
-        console.error("Failed to load collections", error);
-        setCollectionsError("Ошибка сети при загрузке коллекций.");
+  const loadCollections = useCallback(async () => {
+    try {
+      const response = await fetch("/api/collections");
+      const payload = (await response.json()) as CollectionsApiPayload;
+
+      if (!response.ok) {
+        setCollectionsError(payload.error || "Не удалось загрузить коллекции из БД.");
+        return;
       }
-    };
 
-    loadCollections();
+      if (payload.data?.length) {
+        setCollections(payload.data);
+        setCollectionsError("");
+      } else {
+        setCollectionsError("БД вернула пустой список коллекций.");
+      }
+    } catch (error) {
+      console.error("Failed to load collections", error);
+      setCollectionsError("Ошибка сети при загрузке коллекций.");
+    }
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      void loadCollections();
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [loadCollections]);
 
   const total = useMemo(
     () => cartItems.reduce((acc, i) => acc + i.price * i.qty, 0),
     [cartItems],
   );
+
+  const onLogin = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const success = await login({
+      email: String(formData.get("email") || ""),
+      password: String(formData.get("password") || ""),
+    });
+
+    if (success) {
+      setIsAuthOpen(false);
+      form.reset();
+    }
+  };
+
+  const onRegister = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const success = await register({
+      username: String(formData.get("username") || ""),
+      email: String(formData.get("email") || ""),
+      password: String(formData.get("password") || ""),
+    });
+
+    if (success) {
+      setAuthMode("login");
+      form.reset();
+    }
+  };
 
   return (
     <div>
@@ -65,12 +106,14 @@ export default function Home() {
           { href: "#collections", label: "коллекции" },
         ]}
         onOpenAuth={(mode) => {
+          clearMessage();
           setAuthMode(mode);
           setIsAuthOpen(true);
         }}
         onOpenCart={() => setIsCartOpen(true)}
-        onLogout={() => {}}
-        isAuth={false}
+        onLogout={logout}
+        isAuth={isAuth}
+        isAdmin={isAdmin}
         cartCount={cartItems.length}
       />
 
@@ -87,15 +130,18 @@ export default function Home() {
         </p>
       ) : null}
 
-      <Collections data={collections} />
+      <Collections
+        data={collections}
+        isAdmin={isAdmin}
+        accessToken={accessToken}
+        onReload={loadCollections}
+      />
 
       <CartDrawer
         isOpen={isCartOpen}
         items={cartItems}
         onClose={() => setIsCartOpen(false)}
-        onRemove={(id) =>
-          setCartItems((prev) => prev.filter((i) => i.id !== id))
-        }
+        onRemove={(id) => setCartItems((prev) => prev.filter((i) => i.id !== id))}
         onClear={() => setCartItems([])}
         total={total}
       />
@@ -105,9 +151,9 @@ export default function Home() {
         mode={authMode}
         onClose={() => setIsAuthOpen(false)}
         onSwitch={setAuthMode}
-        onLogin={() => {}}
-        onRegister={() => {}}
-        message=""
+        onLogin={onLogin}
+        onRegister={onRegister}
+        message={message}
       />
     </div>
   );

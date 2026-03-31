@@ -10,7 +10,7 @@ export async function POST(req: Request) {
 
   try {
     const result = await pool.query(
-      `DELETE FROM gothelph.user_sessions
+      `DELETE FROM user_sessions
        WHERE expires_at < NOW()
           OR (revoked_at IS NOT NULL AND revoked_at < NOW() - INTERVAL '30 days')`,
     );
