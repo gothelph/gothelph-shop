@@ -27,7 +27,7 @@ export async function POST(req: Request) {
 
     // 1️⃣ Создаём пользователя
     const result = await client.query(
-      `INSERT INTO gothelph.users (username, email, password_hash)
+      `INSERT INTO users (username, email, password_hash)
        VALUES ($1, $2, $3)
        RETURNING id, email`,
       [username, email, hash],
@@ -36,8 +36,8 @@ export async function POST(req: Request) {
 
     // 2️⃣ Добавляем роль "user"
     await client.query(
-      `INSERT INTO gothelph.user_roles (user_id, role_id)
-       SELECT $1, id FROM gothelph.roles WHERE name='user'`,
+      `INSERT INTO user_roles (user_id, role_id)
+       SELECT $1, id FROM roles WHERE name='user'`,
       [userId],
     );
 
