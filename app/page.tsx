@@ -67,8 +67,7 @@ export default function Home() {
 
   const onLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.currentTarget;
-    const formData = new FormData(form);
+    const formData = new FormData(e.currentTarget);
 
     const success = await login({
       email: String(formData.get("email") || ""),
@@ -77,14 +76,13 @@ export default function Home() {
 
     if (success) {
       setIsAuthOpen(false);
-      form.reset();
+      e.currentTarget.reset();
     }
   };
 
   const onRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.currentTarget;
-    const formData = new FormData(form);
+    const formData = new FormData(e.currentTarget);
 
     const success = await register({
       username: String(formData.get("username") || ""),
@@ -94,7 +92,7 @@ export default function Home() {
 
     if (success) {
       setAuthMode("login");
-      form.reset();
+      e.currentTarget.reset();
     }
   };
 
