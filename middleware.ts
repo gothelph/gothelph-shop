@@ -20,7 +20,9 @@ export function middleware(request: NextRequest) {
   const token = getBearerToken(request);
   if (!token) {
     return NextResponse.json(
-      { error: { code: "AUTH_TOKEN_MISSING", message: "Missing bearer token" } },
+      {
+        error: { code: "AUTH_TOKEN_MISSING", message: "Missing bearer token" },
+      },
       { status: 401 },
     );
   }
@@ -30,7 +32,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   } catch {
     return NextResponse.json(
-      { error: { code: "AUTH_TOKEN_INVALID", message: "Invalid access token" } },
+      {
+        error: { code: "AUTH_TOKEN_INVALID", message: "Invalid access token" },
+      },
       { status: 401 },
     );
   }
