@@ -1,4 +1,6 @@
+"use client";
 import Link from "next/link";
+import { useState, useMemo } from "react";
 
 const navItems = [
   { href: "#catalog", label: "каталог" },
@@ -7,6 +9,15 @@ const navItems = [
 ];
 
 export default function Home() {
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const cartItems = [
+    { id: 1, title: "GOTHELPH Hoodie", size: "L", qty: 1, price: 5900 },
+  ];
+  const cartTotal = useMemo(
+    () => cartItems.reduce((acc, item) => acc + item.price * item.qty, 0),
+    [],
+  );
   return (
     <div className="min-h-screen bg-neutral-100 text-neutral-900">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 pt-8 md:px-10">
@@ -71,7 +82,8 @@ export default function Home() {
         <section id="about" className="space-y-4 scroll-mt-24">
           <h2 className="text-4xl font-semibold">О бренде</h2>
           <p className="text-xl text-neutral-700">
-            GOTHELPH — визуальный стиль, уличная мода и вдохновение поп-культурой.
+            GOTHELPH — визуальный стиль, уличная мода и вдохновение
+            поп-культурой.
           </p>
         </section>
       </main>
