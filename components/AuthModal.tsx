@@ -75,7 +75,7 @@ export default function AuthModal({
               type="password"
               placeholder="password"
               required
-              minLength={6}
+              minLength={8}
             />
             <button className={styles.submit} type="submit">
               Регистрация
