@@ -30,7 +30,6 @@ export async function POST(req: Request) {
   try {
     payload = verifyToken(refreshToken) as { userId: number };
   } catch {
-    client.release();
     return errorResponse({
       status: 401,
       code: "AUTH_TOKEN_INVALID",

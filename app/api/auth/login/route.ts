@@ -8,7 +8,18 @@ import { generateAccessToken, generateRefreshToken } from "@/lib/utils/jwt";
 import { hashToken } from "@/lib/utils/token-hash";
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  let body: unknown;
+
+  try {
+    body = await req.json();
+  } catch {
+    return errorResponse({
+      status: 400,
+      code: "VALIDATION_ERROR",
+      message: "Request body must be valid JSON",
+    });
+  }
+
   const parsed = validateLoginPayload(body);
 
   if (!parsed.valid) {
