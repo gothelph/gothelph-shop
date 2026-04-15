@@ -1,5 +1,4 @@
 import pool from "@/lib/db";
-import { collectionsData } from "@/data/collections";
 import { Collection } from "@/types/collection";
 
 type DbRow = {
@@ -9,6 +8,7 @@ type DbRow = {
   item_name: string | null;
   item_type: string | null;
   item_price: number | string | null;
+  item_image: string | null;
 };
 
 export type CollectionsResult = {
@@ -87,6 +87,7 @@ function mapRowsToCollections(rows: DbRow[]): Collection[] {
       name: row.item_name,
       type: row.item_type || "Без категории",
       price: Number(row.item_price) || 0,
+      image: row.item_image || "",
     });
   }
 
@@ -151,7 +152,14 @@ async function loadCollectionsFromDb(): Promise<CollectionsResult> {
 
   const joins = [
     canJoinProducts
-      ? "LEFT JOIN product_collections pc ON pc.collection_id = c.id LEFT JOIN products p ON p.id = pc.product_id"
+      ? `
+      LEFT JOIN product_collections pc 
+        ON pc.collection_id = c.id 
+      LEFT JOIN products p 
+        ON p.id = pc.product_id
+      LEFT JOIN product_images pi 
+        ON pi.product_id = p.id AND pi.is_main = true
+    `
       : "",
     canJoinCategories
       ? "LEFT JOIN categories cat ON cat.id = p.category_id"
@@ -173,7 +181,8 @@ async function loadCollectionsFromDb(): Promise<CollectionsResult> {
       ${collectionDescriptionExpr} AS collection_description,
       ${productNameExpr} AS item_name,
       ${categoryExpr} AS item_type,
-      ${priceExpr} AS item_price
+      ${priceExpr} AS item_price,
+      pi.image_url AS item_image
     FROM collections c
     ${joins}
     ORDER BY 2, 4 NULLS LAST
@@ -192,22 +201,14 @@ async function loadCollectionsFromDb(): Promise<CollectionsResult> {
   };
 }
 
-export async function getCollectionsData(
-  allowFallback = true,
-): Promise<CollectionsResult> {
+export async function getCollectionsData(): Promise<CollectionsResult> {
   try {
     return await loadCollectionsFromDb();
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown DB error";
 
-    if (!allowFallback) {
-      throw new Error(`Не удалось получить коллекции из БД. ${message}`);
-    }
+    console.error("Collections load failed:", message);
 
-    return {
-      data: collectionsData,
-      source: "fallback",
-      warnings: [message],
-    };
+    throw new Error(`Не удалось получить коллекции из БД. ${message}`);
   }
 }

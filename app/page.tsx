@@ -1,12 +1,12 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
-import Header from "@/components/Header";
-import CartDrawer from "@/components/CartDrawer";
-import AuthModal from "@/components/AuthModal";
-import Collections from "@/components/Collections";
+import Header from "@/components/header/Header";
+import CartDrawer from "@/components/card-drawer/CartDrawer";
+import AuthModal from "@/components/auth-modal/AuthModal";
+import Collections from "@/components/collections/Collections";
 import { useAuth } from "@/hooks/useAuth";
-import { Cover } from "@/components/components/cover/cover";
+import { Cover } from "@/components/cover/cover";
 import { useCollections } from "@/hooks/useCollections";
 
 export default function Home() {
@@ -134,6 +134,7 @@ export default function Home() {
         onRegister={onRegister}
         message={message}
       />
+      <div className="text-red-500 text-3xl">Tailwind работает?</div>
     </div>
   );
 }

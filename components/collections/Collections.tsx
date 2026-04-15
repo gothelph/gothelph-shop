@@ -2,8 +2,8 @@
 
 import { FormEvent, useState } from "react";
 import { Collection } from "@/types/collection";
-import styles from "./components/Collections.module.css";
-import ProductCard from "./components/productcard/productcard";
+import styles from "./Collections.module.css";
+import ProductCard from "../productcard/productcard";
 
 type Props = {
   data: Collection[];

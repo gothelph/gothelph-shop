@@ -2,6 +2,7 @@ export type Item = {
   name: string;
   type: string;
   price: number;
+  image: string;
 };
 
 export type Subcollection = {
