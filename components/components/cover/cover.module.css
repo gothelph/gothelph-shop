@@ -1,0 +1,6 @@
+.cover {
+  padding-inline: 5%;
+  width: 100%;
+  height: 80vh;
+  object-fit: cover;
+}

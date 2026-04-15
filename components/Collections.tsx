@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { Collection } from "@/types/collection";
 import styles from "./components/Collections.module.css";
+import ProductCard from "./components/productcard/productcard";
 
 type Props = {
   data: Collection[];
@@ -124,23 +125,13 @@ export default function Collections({
 
               <div className={styles.itemsGrid}>
                 {sub.items.map((item) => (
-                  <div key={item.name} className={styles.itemCard}>
-                    <p className={styles.itemName}>{item.name}</p>
-                    <p className={styles.itemMeta}>{item.type}</p>
-                    <p className={styles.itemPrice}>{item.price} ₽</p>
-
-                    {isAdmin && (
-                      <button
-                        className={styles.deleteBtn}
-                        type="button"
-                        onClick={() =>
-                          handleDeleteProduct(collection.id, item.name)
-                        }
-                      >
-                        Удалить товар
-                      </button>
-                    )}
-                  </div>
+                  <ProductCard
+                    key={item.name}
+                    item={item}
+                    isAdmin={isAdmin}
+                    collectionId={collection.id}
+                    onDelete={handleDeleteProduct}
+                  />
                 ))}
               </div>
             </div>
