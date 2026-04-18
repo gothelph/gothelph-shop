@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 
 type Item = {
   id: number;
@@ -25,11 +26,34 @@ export default function CartDrawer({
   onClear,
   total,
 }: Props) {
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   return (
-    <div className="fixed inset-0 bg-black/40">
-      <aside className="ml-auto h-full w-full max-w-md bg-white p-6">
+    <div
+      className={`fixed inset-0 z-50 transition ${
+        isOpen ? "bg-black/40" : "pointer-events-none bg-transparent"
+      }`}
+      onClick={onClose}
+    >
+      <aside
+        onClick={(e) => e.stopPropagation()}
+        className={`fixed top-[120px] right-0 w-full max-w-md h-[calc(100vh-120px)] bg-white p-6 transform transition-transform duration-300 ease-in-out
+        ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+      >
         <button onClick={onClose}>×</button>
 
         {items.map((item) => (

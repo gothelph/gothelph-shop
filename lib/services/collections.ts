@@ -201,7 +201,9 @@ async function loadCollectionsFromDb(): Promise<CollectionsResult> {
   };
 }
 
-export async function getCollectionsData(): Promise<CollectionsResult> {
+export async function getCollectionsData(
+  p0: boolean,
+): Promise<CollectionsResult> {
   try {
     return await loadCollectionsFromDb();
   } catch (error) {

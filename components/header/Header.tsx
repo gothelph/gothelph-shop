@@ -1,10 +1,15 @@
 "use client";
 
-import Link from "next/link";
-import styles from "./Header.module.css";
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
+} from "@/components/ui/navigation-menu";
 
 type Props = {
-  navItems: { href: string; label: string }[];
+  navItems: { href: string; label: string; className: string }[];
   onOpenAuth: (mode: "login" | "register") => void;
   onOpenCart: () => void;
   onLogout: () => void;
@@ -23,47 +28,60 @@ export default function Header({
   cartCount,
 }: Props) {
   return (
-    <header className={styles.header}>
-      <nav className={styles.nav}>
-        {navItems.map((item) => (
-          <Link key={item.href} href={item.href}>
-            {item.label}
-          </Link>
-        ))}
-      </nav>
+    <header className="w-full border-b sticky top-0 z-50 bg-white/80 backdrop-blur">
+      <div className="relative max-w-6xl mx-auto flex items-center justify-between h-30 px-4">
+        <NavigationMenu>
+          <NavigationMenuList>
+            {/* Каталог (dropdown) */}
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>КАТАЛОГ</NavigationMenuTrigger>
 
-      <div className={styles.brand}>
-        <div className={styles.logo} />
-        <p className={styles.title}>GOTHELPH</p>
-      </div>
+              <NavigationMenuContent>
+                <div className="p-3 w-[200px] text-sm">Тут будут категории</div>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
 
-      <div className={styles.actions}>
-        {!isAuth && (
-          <>
-            <button
-              className={styles.btn}
-              onClick={() => onOpenAuth("register")}
-            >
-              регистрация
-            </button>
-            <button className={styles.btn} onClick={() => onOpenAuth("login")}>
-              вход
-            </button>
-          </>
-        )}
-        <button className={styles.btn} onClick={onOpenCart}>
-          корзина ({cartCount})
-        </button>
-        {isAuth && (
-          <button className={styles.btn} onClick={onLogout}>
-            выйти
-          </button>
-        )}
-        {isAuth && (
-          <span className={styles.role}>
-            {isAdmin ? "Администратор" : "Пользователь"}
-          </span>
-        )}
+            {/* остальные пункты (якоря) */}
+            {navItems.map((item) => (
+              <NavigationMenuItem key={item.href}>
+                <a
+                  href={item.href}
+                  className="px-3 py-2 ${item.className ?? text-lg} hover:opacity-70 transition"
+                >
+                  {item.label}
+                </a>
+              </NavigationMenuItem>
+            ))}
+          </NavigationMenuList>
+        </NavigationMenu>
+
+        {/* 🟣 ЛОГО ПО ЦЕНТРУ */}
+        <div className="absolute left-1/2 -translate-x-1/2">
+          <div className="font-bold text-lg">GOTHELPH</div>
+        </div>
+
+        {/* 🟡 ПРАВО (действия) */}
+        <div className="flex items-center gap-4 text-lg">
+          {!isAuth && (
+            <>
+              <button onClick={() => onOpenAuth("register")}>
+                РЕГИСТРАЦИЯ
+              </button>
+              <button onClick={() => onOpenAuth("login")}>ВХОД</button>
+            </>
+          )}
+
+          <button onClick={onOpenCart}>КОРЗИНА ({cartCount})</button>
+
+          {isAuth && (
+            <>
+              <button onClick={onLogout}>выйти</button>
+              <span className="text-xs text-gray-500">
+                {isAdmin ? "Администратор" : "Пользователь"}
+              </span>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );

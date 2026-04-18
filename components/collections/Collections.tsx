@@ -1,9 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
 import { Collection } from "@/types/collection";
-import styles from "./Collections.module.css";
-import ProductCard from "../productcard/productcard";
 
 type Props = {
   data: Collection[];
@@ -12,132 +9,68 @@ type Props = {
   onReload: () => Promise<void>;
 };
 
-export default function Collections({
-  data,
-  isAdmin,
-  accessToken,
-  onReload,
-}: Props) {
-  const [statusMessage, setStatusMessage] = useState("");
-
-  const handleCollectionSave = async (
-    e: FormEvent<HTMLFormElement>,
-    collectionId: string,
-  ) => {
-    e.preventDefault();
-    const form = new FormData(e.currentTarget);
-
-    const title = String(form.get("title") || "").trim();
-    const description = String(form.get("description") || "").trim();
-
-    const response = await fetch("/api/collections", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({ collectionId, title, description }),
-    });
-
-    if (!response.ok) {
-      setStatusMessage("Не удалось обновить карточку коллекции.");
-      return;
-    }
-
-    setStatusMessage("Карточка коллекции обновлена.");
-    await onReload();
-  };
-
-  const handleDeleteProduct = async (
-    collectionId: string,
-    productName: string,
-  ) => {
-    const response = await fetch("/api/collections", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({ collectionId, productName }),
-    });
-
-    if (!response.ok) {
-      setStatusMessage("Не удалось удалить товар.");
-      return;
-    }
-
-    setStatusMessage(`Товар "${productName}" удалён.`);
-    await onReload();
-  };
-
+export default function Collections({ data }: Props) {
   if (data.length === 0) {
     return (
-      <section id="collections" className={styles.section}>
-        <h2 className={styles.title}>Коллекции</h2>
-        <p className={styles.itemMeta}>Данные коллекций пока не загружены.</p>
+      <section id="collections" className="max-w-6xl mx-auto px-4 py-10">
+        <h2 className="text-2xl font-bold mb-4">Коллекции</h2>
+        <p className="text-gray-500">Данные коллекций пока не загружены.</p>
       </section>
     );
   }
 
-  return (
-    <section id="collections" className={styles.section}>
-      <h2 className={styles.title}>Коллекции</h2>
-      {statusMessage && <p className={styles.itemMeta}>{statusMessage}</p>}
+  // return (
+  //   <div className="flex p-50px">
+  //     <button className="p-50px">Кнопка</button>
+  //   </div>
+  // );
+  //   <section id="collections" className="max-w-6xl mx-auto px-4 py-16">
+  //     <h2 className="text-3xl font-bold mb-6">Коллекции</h2>
 
-      {data.map((collection) => (
-        <article key={collection.id} className={styles.collectionCard}>
-          <h3 className={styles.collectionTitle}>{collection.title}</h3>
-          <p className={styles.collectionDescription}>
-            {collection.description}
-          </p>
+  //     {statusMessage && (
+  //       <p className="mb-4 text-sm text-gray-600">{statusMessage}</p>
+  //     )}
 
-          {isAdmin && (
-            <form
-              className={styles.adminPanel}
-              onSubmit={(e) => handleCollectionSave(e, collection.id)}
-            >
-              <div className={styles.adminFields}>
-                <input
-                  className={styles.input}
-                  name="title"
-                  defaultValue={collection.title}
-                  placeholder="Название коллекции"
-                />
-                <input
-                  className={styles.input}
-                  name="description"
-                  defaultValue={collection.description}
-                  placeholder="Описание"
-                />
-              </div>
-              <div className={styles.btnRow}>
-                <button className={styles.adminBtn} type="submit">
-                  Сохранить карточку
-                </button>
-              </div>
-            </form>
-          )}
+  //     {data.map((collection) => (
+  //       <article
+  //         key={collection.id}
+  //         className="mb-10 border rounded-2xl p-6 shadow-sm"
+  //       >
+  //         <h3 className="text-xl font-semibold">{collection.title}</h3>
 
-          {collection.subcollections.map((sub) => (
-            <div key={sub.id} className={styles.subcollection}>
-              <h4 className={styles.subcollectionTitle}>{sub.title}</h4>
-              <p className={styles.itemMeta}>{sub.description}</p>
+  //         <p className="text-gray-600 mb-4">{collection.description}</p>
 
-              <div className={styles.itemsGrid}>
-                {sub.items.map((item) => (
-                  <ProductCard
-                    key={item.name}
-                    item={item}
-                    isAdmin={isAdmin}
-                    collectionId={collection.id}
-                    onDelete={handleDeleteProduct}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </article>
-      ))}
-    </section>
-  );
+  //         {isAdmin && (
+  //           <form
+  //             onSubmit={(e) => handleCollectionSave(e, collection.id)}
+  //             className="mb-6 space-y-3"
+  //           >
+  //             <div className="flex gap-3">
+  //               <input
+  //                 name="title"
+  //                 defaultValue={collection.title}
+  //                 placeholder="Название коллекции"
+  //                 className="border rounded-lg px-3 py-2 w-full"
+  //               />
+
+  //               <input
+  //                 name="description"
+  //                 defaultValue={collection.description}
+  //                 placeholder="Описание"
+  //                 className="border rounded-lg px-3 py-2 w-full"
+  //               />
+  //             </div>
+
+  //             <button
+  //               type="submit"
+  //               className="bg-black text-white px-4 py-2 rounded-lg"
+  //             >
+  //               Сохранить
+  //             </button>
+  //           </form>
+  //         )}
+  //       </article>
+  //     ))}
+  //   </section>
+  // );
 }
