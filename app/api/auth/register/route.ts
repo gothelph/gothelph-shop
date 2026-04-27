@@ -25,7 +25,7 @@ export async function POST(req: Request) {
   try {
     await client.query("BEGIN"); // старт транзакции
 
-    // 1️⃣ Создаём пользователя
+    // Создаём пользователя
     const result = await client.query(
       `INSERT INTO gothelph.users (username, email, password_hash)
        VALUES ($1, $2, $3)
@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     );
     const userId = result.rows[0].id;
 
-    // 2️⃣ Добавляем роль "user"
+    // Добавляем роль "user"
     await client.query(
       `INSERT INTO gothelph.user_roles (user_id, role_id)
        SELECT $1, id FROM gothelph.roles WHERE name='user'`,
@@ -44,14 +44,25 @@ export async function POST(req: Request) {
     await client.query("COMMIT"); // подтверждаем транзакцию
 
     return okResponse(result.rows[0], 201);
-  } catch (error) {
-    await client.query("ROLLBACK"); // откатываем изменения при ошибке
-    console.error("Registration error:", error); // логируем на сервер
+  } catch (error: unknown) {
+    await client.query("ROLLBACK");
+
+    if (error instanceof Error) {
+      console.error("Registration error:", error.message);
+
+      return errorResponse({
+        status: 500,
+        code: "REGISTRATION_FAILED",
+        message: error.message, // временно для отладки
+      });
+    }
+
+    console.error("Unknown error:", error);
 
     return errorResponse({
-      status: 400,
+      status: 500,
       code: "REGISTRATION_FAILED",
-      message: "Registration failed",
+      message: "Unknown error",
     });
   } finally {
     client.release(); // обязательно освобождаем соединение
