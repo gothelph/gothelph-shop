@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "avatars.mds.yandex.net",
       },
+      {
+        protocol: "https",
+        hostname: "downloader.disk.yandex.ru",
+      },
     ],
   },
 };

@@ -7,26 +7,27 @@ import {
   NavigationMenuTrigger,
   NavigationMenuContent,
 } from "@/components/ui/navigation-menu";
+import { useCart } from "@/hooks/useCart";
 
 type Props = {
   navItems: { href: string; label: string; className: string }[];
   onOpenAuth: (mode: "login" | "register") => void;
-  onOpenCart: () => void;
   onLogout: () => void;
   isAuth: boolean;
   isAdmin: boolean;
-  cartCount: number;
+  userName: string;
 };
 
 export default function Header({
   navItems,
   onOpenAuth,
-  onOpenCart,
   onLogout,
   isAuth,
   isAdmin,
-  cartCount,
+  userName,
 }: Props) {
+  const { items, setIsOpen } = useCart();
+  const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
   return (
     <header className="w-full border-b sticky top-0 z-50 bg-white/80 backdrop-blur">
       <div className="relative max-w-6xl mx-auto flex items-center justify-between h-30 px-4">
@@ -41,7 +42,7 @@ export default function Header({
               </NavigationMenuContent>
             </NavigationMenuItem>
 
-            {/* остальные пункты (якоря) */}
+{/* остальные пункты (якоря) */}
             {navItems.map((item) => (
               <NavigationMenuItem key={item.href}>
                 <a
@@ -71,13 +72,13 @@ export default function Header({
             </>
           )}
 
-          <button onClick={onOpenCart}>КОРЗИНА ({cartCount})</button>
+          <button onClick={() => setIsOpen(true)}>КОРЗИНА ({cartCount})</button>
 
           {isAuth && (
             <>
               <button onClick={onLogout}>выйти</button>
-              <span className="text-xs text-gray-500">
-                {isAdmin ? "Администратор" : "Пользователь"}
+              <span className="text-xs text-black-500">
+                {isAdmin ? "АДМИНИСТРАТОР" : userName}
               </span>
             </>
           )}

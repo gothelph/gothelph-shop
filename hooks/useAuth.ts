@@ -80,6 +80,7 @@ export function useAuth(): UseAuthResult {
         data?: { accessToken: string; roles: string[] };
         error?: { message?: string };
       };
+
       if (!res.ok || !payload.data?.accessToken) {
         setMessage(payload.error?.message || "Ошибка авторизации.");
         return false;

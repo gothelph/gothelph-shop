@@ -1,8 +1,8 @@
 export type Item = {
-  name: string;
-  type: string;
-  price: number;
-  image: string;
+  title: string;
+  type?: string;
+  price?: number;
+  image: string | null;
 };
 
 export type Subcollection = {

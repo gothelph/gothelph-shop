@@ -59,6 +59,7 @@ async function getTableMeta(tableName: string): Promise<TableMeta> {
 
 function mapRowsToCollections(rows: DbRow[]): Collection[] {
   const collections = new Map<string, Collection>();
+  console.debug(rows, "TEST");
 
   for (const row of rows) {
     if (!collections.has(row.collection_id)) {
@@ -84,7 +85,7 @@ function mapRowsToCollections(rows: DbRow[]): Collection[] {
     }
 
     collection.subcollections[0].items.push({
-      name: row.item_name,
+      title: row.item_name,
       type: row.item_type || "Без категории",
       price: Number(row.item_price) || 0,
       image: row.item_image || "",

@@ -36,7 +36,6 @@ export async function POST(req: Request) {
        GROUP BY u.id`,
       [email],
     );
-
     const user = res.rows[0];
     if (!user)
       return errorResponse({
@@ -71,7 +70,7 @@ export async function POST(req: Request) {
       [user.id, refreshTokenHash, userAgent, ipAddress ?? null],
     );
 
-    const response = okResponse({ accessToken, roles: user.roles });
+    const response = okResponse({ data: { accessToken, roles: user.roles } });
     setRefreshTokenCookie(response, refreshToken);
 
     return response;
