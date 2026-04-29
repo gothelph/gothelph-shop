@@ -37,9 +37,9 @@ export default function Home() {
 
       <CategoriesCarousel
         categories={[
-          { name: "Аксессуары", image: "/hero.jpg" },
-          { name: "Одежда", image: "/hero2.jpg" },
-          { name: "Игрушки", image: "/hero.jpg" },
+          { name: "Аксессуары", image: "/orig.jpg" },
+          { name: "Одежда", image: "/одежда.png" },
+          { name: "Игрушки", image: "/cat.jpg" },
         ]}
         onSelect={(cat) => console.log(cat)}
       />

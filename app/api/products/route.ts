@@ -12,7 +12,13 @@ export async function GET(request: Request) {
         p.id,
         p.name,
         p.price,
-        c.name AS category
+        c.name AS category,
+        (
+          SELECT pi.image_url 
+          FROM product_images pi 
+          WHERE pi.product_id = p.id AND pi.is_main = true 
+          LIMIT 1
+        ) AS image
       FROM products p
       LEFT JOIN categories c ON c.id = p.category_id
     `;
@@ -46,7 +52,7 @@ export async function GET(request: Request) {
       name: row.name,
       type: row.category ?? "unknown",
       price: Number(row.price),
-      image: "/placeholder.png",
+      image: row.image || "/placeholder.png",
     }));
 
     return NextResponse.json(items);

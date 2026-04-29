@@ -4,6 +4,7 @@ import Image from "next/image";
 
 type Props = {
   item: {
+    id: string;
     name: string;
     type: string;
     price: number;
@@ -20,23 +21,30 @@ export default function ProductCard({
   collectionId,
   onDelete,
 }: Props) {
+  const imageUrl = item.image && item.image !== "/placeholder.png" 
+    ? item.image 
+    : null;
+
   return (
     <div className={styles.itemCard}>
-      <div className={styles.itemCard}>
-        {item.image && (
+      <div className={styles.imageWrapper}>
+        {imageUrl ? (
           <Image
-            src={item.image}
+            src={imageUrl}
             alt={item.name}
             className={styles.image}
             width={300}
             height={200}
+            unoptimized
           />
+        ) : (
+          <div className={styles.placeholder}>Нет фото</div>
         )}
-
-        <p className={styles.itemName}>{item.name}</p>
-        <p className={styles.itemMeta}>{item.type}</p>
-        <p className={styles.itemPrice}>{item.price} ₽</p>
       </div>
+
+      <p className={styles.itemName}>{item.name}</p>
+      <p className={styles.itemMeta}>{item.type}</p>
+      <p className={styles.itemPrice}>{item.price} ₽</p>
 
       <button
         className={styles.button}

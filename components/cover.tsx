@@ -23,7 +23,7 @@ export function Cover() {
         }}
       >
         <Image
-          src="/forest-bg.jpg"
+          src="/samurai.png"
           alt="forest background"
           fill
           className="object-cover"
@@ -38,7 +38,7 @@ export function Cover() {
         }}
       >
         <Image
-          src="/puk.png"
+          src="/дым.png"
           alt="foreground trees"
           fill
           className="object-cover"

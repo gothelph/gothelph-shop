@@ -24,7 +24,7 @@ export function ParallaxHero() {
         }}
       >
         <Image
-          src="/forest-bg2.jpg"
+          src="/samurai2.png"
           alt="forest background"
           fill
           className="w-full h-full object-cover"

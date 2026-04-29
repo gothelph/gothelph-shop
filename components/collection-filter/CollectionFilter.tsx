@@ -24,23 +24,16 @@ export function CollectionFilter() {
   const router = useRouter();
   const [collections, setCollections] = useState<Collection[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
-  const [selectedCollection, setSelectedCollection] = useState<string | null>(
-    null,
-  );
+  const [selectedCollection, setSelectedCollection] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetch("/api/collections")
-      .then((res) => res.json())
-      .then((data) => setCollections(data.data || []))
-      .catch((err) => console.error(err));
-  }, []);
-
-  const handleSelectCollection = async (collectionId: string) => {
-    setSelectedCollection(collectionId);
+  const fetchProducts = async (collectionId?: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/products?collection_id=${collectionId}`);
+      const url = collectionId 
+        ? `/api/products?collection_id=${collectionId}` 
+        : "/api/products";
+      const res = await fetch(url);
       const data = await res.json();
       setProducts(data || []);
     } catch (err) {
@@ -50,15 +43,31 @@ export function CollectionFilter() {
     }
   };
 
+  useEffect(() => {
+    Promise.all([
+      fetch("/api/collections").then((r) => r.json()),
+      fetch("/api/products").then((r) => r.json()),
+    ]).then(([collectionsData, productsData]) => {
+      setCollections(collectionsData.data || []);
+      setProducts(productsData || []);
+    }).catch((err) => console.error(err));
+  }, []);
+
+  const handleSelectCollection = async (collectionId: string | null) => {
+    setSelectedCollection(collectionId);
+    if (collectionId === null) {
+      await fetchProducts();
+    } else {
+      await fetchProducts(collectionId);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.buttons}>
         <Button
           variant={selectedCollection === null ? "default" : "outline"}
-          onClick={() => {
-            setSelectedCollection(null);
-            setProducts([]);
-          }}
+          onClick={() => handleSelectCollection(null)}
         >
           Все товары
         </Button>
@@ -77,7 +86,7 @@ export function CollectionFilter() {
         <p className={styles.loading}>Загрузка...</p>
       ) : (
         <div className={styles.products}>
-          {products.length === 0 && selectedCollection && (
+          {products.length === 0 && (
             <p className={styles.empty}>Товары не найдены</p>
           )}
           {products.map((product) => (
