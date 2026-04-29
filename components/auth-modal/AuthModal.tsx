@@ -1,67 +1,75 @@
 "use client";
 
-import { FormEvent, useRef } from "react";
+import { FormEvent, useRef, useState } from "react";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import styles from "./AuthModal.module.css";
 
-type Props = {
-  isOpen: boolean;
-  mode: "login" | "register";
-  onClose: () => void;
-  onSwitch: (mode: "login" | "register") => void;
-  onLogin: (e: FormEvent<HTMLFormElement>) => Promise<boolean>;
-  onRegister: (e: FormEvent<HTMLFormElement>) => Promise<boolean>;
-  message: string;
-};
-
-export default function AuthModal({
-  isOpen,
-  mode,
-  onClose,
-  onSwitch,
-  onLogin,
-  onRegister,
-  message,
-}: Props) {
+export default function AuthModal() {
+  const { authModal, closeAuthModal, login, register, message, clearMessage } =
+    useAuthContext();
   const formRef = useRef<HTMLFormElement>(null);
-  if (!isOpen) return null;
+  const [localMode, setLocalMode] = useState(authModal.mode);
+
+  if (!authModal.isOpen) return null;
+
+  const { mode } = authModal;
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget);
     let success = false;
-    if (mode === "login") success = await onLogin(e);
-    else success = await onRegister(e);
-    if (success) formRef.current?.reset();
+
+    const formMode = localMode || mode;
+    if (formMode === "login") {
+      success = await login({
+        email: String(formData.get("email") || ""),
+        password: String(formData.get("password") || ""),
+      });
+    } else {
+      success = await register({
+        username: String(formData.get("username") || ""),
+        email: String(formData.get("email") || ""),
+        password: String(formData.get("password") || ""),
+      });
+    }
+
+    if (success) {
+      formRef.current?.reset();
+      closeAuthModal();
+    }
   };
 
+  const displayMode = localMode || mode;
+
   return (
-    <div className={styles.overlay}>
-      <div className={styles.modal}>
+    <div className={styles.overlay} onClick={closeAuthModal}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h3>{mode === "login" ? "Вход" : "Регистрация"}</h3>
-          <button className={styles.closeBtn} onClick={onClose} type="button">
+          <h3>{displayMode === "login" ? "Вход" : "Регистрация"}</h3>
+          <button className={styles.closeBtn} onClick={closeAuthModal} type="button">
             ×
           </button>
         </div>
 
         <div className={styles.tabs}>
           <button
-            className={mode === "login" ? styles.activeTab : styles.tab}
+            className={displayMode === "login" ? styles.activeTab : styles.tab}
             type="button"
-            onClick={() => onSwitch("login")}
+            onClick={() => { clearMessage(); setLocalMode("login"); }}
           >
             Вход
           </button>
           <button
-            className={mode === "register" ? styles.activeTab : styles.tab}
+            className={displayMode === "register" ? styles.activeTab : styles.tab}
             type="button"
-            onClick={() => onSwitch("register")}
+            onClick={() => { clearMessage(); setLocalMode("register"); }}
           >
             Регистрация
           </button>
         </div>
 
         <form ref={formRef} className={styles.form} onSubmit={handleSubmit}>
-          {mode === "login" ? (
+          {displayMode === "login" ? (
             <>
               <input
                 className={styles.input}

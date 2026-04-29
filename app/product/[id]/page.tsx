@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Header from "@/components/header/Header";
-import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
 import styles from "./product-page.module.css";
@@ -65,18 +64,10 @@ export default function ProductPage() {
   if (loading) {
     return (
       <div>
-        <Header
-          navItems={[{ href: "/catalog", label: "КОЛЛЕКЦИИ", className: "text-lg" }]}
-          onOpenAuth={() => {}}
-          onLogout={() => {}}
-          isAuth={false}
-          isAdmin={false}
-          userName=""
-        />
+        <Header navItems={[{ href: "/catalog", label: "КОЛЛЕКЦИИ", className: "text-lg" }]} />
         <div className={styles.container}>
           <p>Загрузка...</p>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -84,19 +75,11 @@ export default function ProductPage() {
   if (error || !product) {
     return (
       <div>
-        <Header
-          navItems={[{ href: "/catalog", label: "КОЛЛЕКЦИИ", className: "text-lg" }]}
-          onOpenAuth={() => {}}
-          onLogout={() => {}}
-          isAuth={false}
-          isAdmin={false}
-          userName=""
-        />
+        <Header navItems={[{ href: "/catalog", label: "КОЛЛЕКЦИИ", className: "text-lg" }]} />
         <div className={styles.container}>
           <p className={styles.error}>{error || "Товар не найден"}</p>
           <Button onClick={() => window.history.back()}>Назад</Button>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -108,11 +91,6 @@ export default function ProductPage() {
           { href: "/", label: "ГЛАВНАЯ", className: "text-lg" },
           { href: "/catalog", label: "КОЛЛЕКЦИИ", className: "text-lg" },
         ]}
-        onOpenAuth={() => {}}
-        onLogout={() => {}}
-        isAuth={false}
-        isAdmin={false}
-        userName=""
       />
 
       <div className={styles.container}>
@@ -154,8 +132,6 @@ export default function ProductPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }

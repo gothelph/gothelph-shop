@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/header/Header";
-import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
 import styles from "./checkout.module.css";
@@ -53,22 +52,11 @@ export default function CheckoutPage() {
   if (items.length === 0 && !submitted) {
     return (
       <div>
-        <Header
-          navItems={[
-            { href: "/", label: "ГЛАВНАЯ", className: "text-lg" },
-            { href: "/catalog", label: "КОЛЛЕКЦИИ", className: "text-lg" },
-          ]}
-          onOpenAuth={() => {}}
-          onLogout={() => {}}
-          isAuth={false}
-          isAdmin={false}
-          userName=""
-        />
+        <Header navItems={[{ href: "/catalog", label: "Catalog", className: "text-lg" }]} />
         <div className={styles.container}>
-          <p>Корзина пуста</p>
-          <Button onClick={() => window.history.back()}>Назад в каталог</Button>
+          <p>Cart is empty</p>
+          <Button onClick={() => window.history.back()}>Back to catalog</Button>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -76,49 +64,28 @@ export default function CheckoutPage() {
   if (submitted) {
     return (
       <div>
-        <Header
-          navItems={[
-            { href: "/", label: "ГЛАВНАЯ", className: "text-lg" },
-            { href: "/catalog", label: "КОЛЛЕКЦИИ", className: "text-lg" },
-          ]}
-          onOpenAuth={() => {}}
-          onLogout={() => {}}
-          isAuth={false}
-          isAdmin={false}
-          userName=""
-        />
+        <Header navItems={[{ href: "/", label: "Main", className: "text-lg" }]} />
         <div className={styles.container}>
-          <h1>Спасибо за заказ!</h1>
-          <p>Мы свяжемся с вами в ближайшее время.</p>
+          <h1>Thank you for your order!</h1>
+          <p>We will contact you soon.</p>
           <Link href="/">
-            <Button>На главную</Button>
+            <Button>Main page</Button>
           </Link>
         </div>
-        <Footer />
       </div>
     );
   }
 
   return (
     <div>
-      <Header
-        navItems={[
-          { href: "/", label: "ГЛАВНАЯ", className: "text-lg" },
-          { href: "/catalog", label: "КОЛЛЕКЦИИ", className: "text-lg" },
-        ]}
-        onOpenAuth={() => {}}
-        onLogout={() => {}}
-        isAuth={false}
-        isAdmin={false}
-        userName=""
-      />
+      <Header navItems={[{ href: "/catalog", label: "Catalog", className: "text-lg" }]} />
 
       <div className={styles.container}>
-        <h1>Оформление заказа</h1>
+        <h1>Checkout</h1>
 
         <div className={styles.content}>
           <div className={styles.items}>
-            <h2>Товары</h2>
+            <h2>Items</h2>
             {items.map((item) => (
               <div key={item.id} className={styles.item}>
                 <div className={styles.itemImage}>
@@ -134,20 +101,18 @@ export default function CheckoutPage() {
                 </div>
                 <div className={styles.itemInfo}>
                   <p className={styles.itemName}>{item.name}</p>
-                  <p>
-                    {item.price} ₽ x {item.quantity} = {item.price * item.quantity} ₽
-                  </p>
+                  <p>{item.price} x {item.quantity} = {item.price * item.quantity}</p>
                 </div>
               </div>
             ))}
-            <p className={styles.total}>Итого: {total} ₽</p>
+            <p className={styles.total}>Total: {total}</p>
           </div>
 
           <form className={styles.form} onSubmit={handleSubmit}>
-            <h2>Контактные данные</h2>
+            <h2>Contact info</h2>
 
             <label>
-              Имя *
+              Name *
               <input
                 type="text"
                 value={name}
@@ -157,7 +122,7 @@ export default function CheckoutPage() {
             </label>
 
             <label>
-              Телефон *
+              Phone *
               <input
                 type="tel"
                 value={phone}
@@ -176,7 +141,7 @@ export default function CheckoutPage() {
             </label>
 
             <label>
-              Адрес доставки *
+              Address *
               <textarea
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
@@ -185,19 +150,17 @@ export default function CheckoutPage() {
             </label>
 
             <label>
-              Комментарий
+              Comment
               <textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
               />
             </label>
 
-            <Button type="submit">Оформить заказ</Button>
+            <Button type="submit">Place order</Button>
           </form>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }

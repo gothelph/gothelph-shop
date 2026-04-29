@@ -8,46 +8,44 @@ import {
   NavigationMenuContent,
 } from "@/components/ui/navigation-menu";
 import { useCart } from "@/hooks/useCart";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 type Props = {
-  navItems: { href: string; label: string; className: string }[];
-  onOpenAuth: (mode: "login" | "register") => void;
-  onLogout: () => void;
-  isAuth: boolean;
-  isAdmin: boolean;
-  userName: string;
+  navItems?: { href: string; label: string; className: string }[];
 };
 
-export default function Header({
-  navItems,
-  onOpenAuth,
-  onLogout,
-  isAuth,
-  isAdmin,
-  userName,
-}: Props) {
+export default function Header({ navItems = [] }: Props) {
   const { items, setIsOpen } = useCart();
+  const { isAuth, roles, logout, authModal, openAuthModal } = useAuthContext();
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  const isAdmin = roles.includes("admin");
+
+  const defaultNavItems = [
+    { href: "/", label: "ГЛАВНАЯ", className: "text-lg" },
+    { href: "/catalog", label: "КОЛЛЕКЦИИ", className: "text-lg" },
+  ];
+
+  const allNavItems = navItems.length > 0 ? navItems : defaultNavItems;
+
   return (
     <header className="w-full border-b sticky top-0 z-50 bg-white/80 backdrop-blur">
       <div className="relative max-w-6xl mx-auto flex items-center justify-between h-30 px-4">
         <NavigationMenu>
           <NavigationMenuList>
-            {/* Каталог (dropdown) */}
             <NavigationMenuItem>
               <NavigationMenuTrigger>КАТАЛОГ</NavigationMenuTrigger>
-
               <NavigationMenuContent>
-                <div className="p-3 w-[200px] text-sm">Тут будут категории</div>
+                <div className="p-3 w-[200px] text-sm">
+                  <a href="/catalog" className="block py-1">Все товары</a>
+                </div>
               </NavigationMenuContent>
             </NavigationMenuItem>
 
-{/* остальные пункты (якоря) */}
-            {navItems.map((item) => (
+            {allNavItems.map((item) => (
               <NavigationMenuItem key={item.href}>
                 <a
                   href={item.href}
-                  className="px-3 py-2 ${item.className ?? text-lg} hover:opacity-70 transition"
+                  className="px-3 py-2 hover:opacity-70 transition"
                 >
                   {item.label}
                 </a>
@@ -56,19 +54,19 @@ export default function Header({
           </NavigationMenuList>
         </NavigationMenu>
 
-        {/* 🟣 ЛОГО ПО ЦЕНТРУ */}
         <div className="absolute left-1/2 -translate-x-1/2">
-          <div className="font-bold text-lg">GOTHELPH</div>
+          <a href="/" className="font-bold text-lg">GOTHELPH</a>
         </div>
 
-        {/* 🟡 ПРАВО (действия) */}
         <div className="flex items-center gap-4 text-lg">
           {!isAuth && (
             <>
-              <button onClick={() => onOpenAuth("register")}>
+              <button onClick={() => openAuthModal("register")}>
                 РЕГИСТРАЦИЯ
               </button>
-              <button onClick={() => onOpenAuth("login")}>ВХОД</button>
+              <button onClick={() => openAuthModal("login")}>
+                ВХОД
+              </button>
             </>
           )}
 
@@ -76,10 +74,15 @@ export default function Header({
 
           {isAuth && (
             <>
-              <button onClick={onLogout}>выйти</button>
-              <span className="text-xs text-black-500">
-                {isAdmin ? "АДМИНИСТРАТОР" : userName}
+              <button onClick={logout}>выйти</button>
+              <span className="text-xs">
+                {isAdmin ? "АДМИН" : "ПОЛЬЗОВАТЕЛЬ"}
               </span>
+              {isAdmin && (
+                <a href="/admin/products" className="text-xs">
+                  УПРАВЛЕНИЕ
+                </a>
+              )}
             </>
           )}
         </div>

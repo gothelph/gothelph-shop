@@ -1,6 +1,5 @@
 "use client";
 import Header from "../header/Header";
-import { Footer } from "../footer";
 import { useState, useEffect } from "react";
 
 export function Categories() {
@@ -24,15 +23,7 @@ export function Categories() {
 
 return (
     <div>
-      <Header
-        navItems={[]}
-        onOpenAuth={() => {}}
-        onLogout={() => {}}
-        isAuth={false}
-        isAdmin={false}
-        userName=""
-      />
-      <Footer />
+      <Header navItems={[]} />
     </div>
   );
 }
