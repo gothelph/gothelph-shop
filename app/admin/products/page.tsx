@@ -15,6 +15,16 @@ type Product = {
   image: string;
 };
 
+type ProductEditData = {
+  id: string;
+  name: string;
+  price: number;
+  categoryId: string | null;
+  collectionId: string | null;
+  description: string | null;
+  imageUrl: string | null;
+};
+
 type Collection = {
   id: string;
   title?: string;
@@ -36,14 +46,16 @@ export default function AdminProductsPage() {
   const [editing, setEditing] = useState<Product | null>(null);
   const [showForm, setShowForm] = useState(false);
 
-  const [form, setForm] = useState({
+  const emptyForm = {
     name: "",
     price: "",
     categoryId: "",
     collectionId: "",
     description: "",
     imageUrl: "",
-  });
+  };
+
+  const [form, setForm] = useState(emptyForm);
 
   useEffect(() => {
     if (!isAuth || !roles.includes("admin")) {
@@ -84,14 +96,7 @@ export default function AdminProductsPage() {
     if (res.ok) {
       setShowForm(false);
       setEditing(null);
-      setForm({
-        name: "",
-        price: "",
-        categoryId: "",
-        collectionId: "",
-        description: "",
-        imageUrl: "",
-      });
+      setForm(emptyForm);
       const productsRes = await fetch("/api/products");
       const data = await productsRes.json();
       setProducts(data || []);
@@ -116,17 +121,39 @@ export default function AdminProductsPage() {
     }
   };
 
-  const handleEdit = (product: Product) => {
-    setEditing(product);
-    setForm({
+  const handleEdit = async (product: Product) => {
+    if (!accessToken) return;
+
+    const fallbackForm = {
       name: product.name,
       price: String(product.price),
       categoryId: "",
       collectionId: "",
       description: "",
-      imageUrl: product.image,
-    });
+      imageUrl: product.image === "/placeholder.png" ? "" : product.image,
+    };
+
+    setEditing(product);
+    setForm(fallbackForm);
     setShowForm(true);
+
+    const res = await fetch(`/api/admin/products?id=${product.id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!res.ok) return;
+
+    const data = (await res.json()) as ProductEditData;
+    setForm({
+      name: data.name || "",
+      price: String(data.price ?? ""),
+      categoryId: data.categoryId || "",
+      collectionId: data.collectionId || "",
+      description: data.description || "",
+      imageUrl: data.imageUrl || "",
+    });
   };
 
   if (loading) {
@@ -152,7 +179,15 @@ export default function AdminProductsPage() {
       <div className={styles.container}>
         <div className={styles.header}>
           <h1>Управление товарами</h1>
-          <Button onClick={() => setShowForm(true)}>Добавить товар</Button>
+          <Button
+            onClick={() => {
+              setEditing(null);
+              setForm(emptyForm);
+              setShowForm(true);
+            }}
+          >
+            Добавить товар
+          </Button>
         </div>
 
         {showForm && (
@@ -242,6 +277,7 @@ export default function AdminProductsPage() {
                 onClick={() => {
                   setShowForm(false);
                   setEditing(null);
+                  setForm(emptyForm);
                 }}
               >
                 Отмена
