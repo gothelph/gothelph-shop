@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { useCart } from "@/hooks/useCart";
 import { useAuthContext } from "@/hooks/useAuthContext";
+import { Logo } from "../logo";
 
 type Props = {
   navItems?: { href: string; label: string; className: string }[];
@@ -16,7 +17,7 @@ type Props = {
 
 export default function Header({ navItems = [] }: Props) {
   const { items, setIsOpen } = useCart();
-  const { isAuth, roles, logout, authModal, openAuthModal } = useAuthContext();
+  const { isAuth, roles, logout, openAuthModal } = useAuthContext();
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const isAdmin = roles.includes("admin");
 
@@ -29,14 +30,16 @@ export default function Header({ navItems = [] }: Props) {
 
   return (
     <header className="w-full border-b sticky top-0 z-50 bg-white/80 backdrop-blur">
-      <div className="relative max-w-6xl mx-auto flex items-center justify-between h-30 px-4">
+      <div className="max-w-6xl mx-auto flex items-center justify-between h-30 px-4">
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuTrigger>КАТАЛОГ</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <div className="p-3 w-[200px] text-sm">
-                  <a href="/catalog" className="block py-1">Все товары</a>
+                  <a href="/catalog" className="block py-1">
+                    Все товары
+                  </a>
                 </div>
               </NavigationMenuContent>
             </NavigationMenuItem>
@@ -54,9 +57,7 @@ export default function Header({ navItems = [] }: Props) {
           </NavigationMenuList>
         </NavigationMenu>
 
-        <div className="absolute left-1/2 -translate-x-1/2">
-          <a href="/" className="font-bold text-lg">GOTHELPH</a>
-        </div>
+        <Logo />
 
         <div className="flex items-center gap-4 text-lg">
           {!isAuth && (
@@ -64,9 +65,7 @@ export default function Header({ navItems = [] }: Props) {
               <button onClick={() => openAuthModal("register")}>
                 РЕГИСТРАЦИЯ
               </button>
-              <button onClick={() => openAuthModal("login")}>
-                ВХОД
-              </button>
+              <button onClick={() => openAuthModal("login")}>ВХОД</button>
             </>
           )}
 

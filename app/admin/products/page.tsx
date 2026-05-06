@@ -132,7 +132,9 @@ export default function AdminProductsPage() {
   if (loading) {
     return (
       <div>
-        <Header navItems={[{ href: "/", label: "ГЛАВНАЯ", className: "text-lg" }]} />
+        <Header
+          navItems={[{ href: "/", label: "ГЛАВНАЯ", className: "text-lg" }]}
+        />
         <div className={styles.container}>Загрузка...</div>
       </div>
     );
@@ -181,7 +183,9 @@ export default function AdminProductsPage() {
               Категория
               <select
                 value={form.categoryId}
-                onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, categoryId: e.target.value })
+                }
               >
                 <option value="">Выберите категорию</option>
                 {categories.map((c) => (
@@ -196,7 +200,9 @@ export default function AdminProductsPage() {
               Коллекция
               <select
                 value={form.collectionId}
-                onChange={(e) => setForm({ ...form, collectionId: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, collectionId: e.target.value })
+                }
               >
                 <option value="">Выберите коллекцию</option>
                 {collections.map((c) => (
@@ -220,7 +226,9 @@ export default function AdminProductsPage() {
               Описание
               <textarea
                 value={form.description}
-                onChange={(e) => setForm({ ...form, description: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, description: e.target.value })
+                }
               />
             </label>
 
@@ -255,7 +263,10 @@ export default function AdminProductsPage() {
                 <Button variant="outline" onClick={() => handleEdit(product)}>
                   Редактировать
                 </Button>
-                <Button variant="destructive" onClick={() => handleDelete(product.id)}>
+                <Button
+                  variant="destructive"
+                  onClick={() => handleDelete(product.id)}
+                >
                   Удалить
                 </Button>
               </div>

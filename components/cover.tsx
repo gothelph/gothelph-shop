@@ -14,7 +14,7 @@ export function Cover() {
   }, []);
 
   return (
-    <div className="relative h-[80vh] overflow-hidden">
+    <div className="relative h-[80vh] overflow-hidden mt-[10%]">
       {/* 🌲 ФОН */}
       <div
         className="absolute inset-0"

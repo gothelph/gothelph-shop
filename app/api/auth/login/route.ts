@@ -7,6 +7,18 @@ import { validateLoginPayload } from "@/lib/utils/auth-validation";
 import { generateAccessToken, generateRefreshToken } from "@/lib/utils/jwt";
 import { hashToken } from "@/lib/utils/token-hash";
 
+export interface LoginResponse {
+  data?: {
+    accessToken: string;
+    roles: string[];
+  };
+  error?: {
+    status: number;
+    code: string;
+    message: string;
+  };
+}
+
 export async function POST(req: Request) {
   const body = await req.json();
   const parsed = validateLoginPayload(body);

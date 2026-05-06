@@ -1,5 +1,6 @@
 "use client";
 
+import { LoginResponse } from "@/app/api/auth/login/route";
 import { useCallback, useEffect, useState } from "react";
 
 type AuthState = {
@@ -45,11 +46,12 @@ export function useAuth(): UseAuthResult {
       });
       if (!res.ok) throw new Error("AUTH_SYNC_FAILED");
       const payload = (await res.json()) as {
-        data?: { userId: number; roles: string[] };
+        userId: number;
+        roles: string[];
       };
       setIsAuth(true);
-      setRoles(payload.data?.roles || []);
-      setUserId(payload.data?.userId || null);
+      setRoles(payload.roles || []);
+      setUserId(payload.userId || null);
     } catch {
       if (typeof window !== "undefined")
         window.localStorage.removeItem(ACCESS_TOKEN_KEY);
@@ -76,10 +78,7 @@ export function useAuth(): UseAuthResult {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      const payload = (await res.json()) as {
-        data?: { accessToken: string; roles: string[] };
-        error?: { message?: string };
-      };
+      const payload: LoginResponse = await res.json();
 
       if (!res.ok || !payload.data?.accessToken) {
         setMessage(payload.error?.message || "Ошибка авторизации.");

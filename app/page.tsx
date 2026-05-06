@@ -25,16 +25,17 @@ export default function Home() {
 
   return (
     <div>
-      <Header
-        navItems={[
-          { href: "#catalog", label: "КОЛЛЕКЦИИ", className: "text-lg" },
-          { href: "#contacts", label: "КОНТАКТЫ", className: "text-lg" },
-        ]}
-      />
+      <div className="h-100vh flex flex-col justify-between">
+        <Header
+          navItems={[
+            { href: "#catalog", label: "КОЛЛЕКЦИИ", className: "text-lg" },
+            { href: "#contacts", label: "КОНТАКТЫ", className: "text-lg" },
+          ]}
+        />
 
-      <Cover />
-      <ParallaxHero />
-
+        <Cover />
+        <ParallaxHero />
+      </div>
       <CategoriesCarousel
         categories={[
           { name: "Аксессуары", image: "/orig.jpg" },

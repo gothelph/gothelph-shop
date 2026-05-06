@@ -1,0 +1,46 @@
+/* Basic styles for AdminOrdersPage */
+.container {
+  max-width: 1200px;
+  margin: 4rem auto;
+  padding: 0 1rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table thead tr {
+  background-color: #f8f9fa;
+  text-align: left;
+}
+
+.table th, .table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.table tbody tr:hover {
+  background-color: #f1f3f5;
+}
+
+.statusCell {
+  font-weight: bold;
+}
+
+/* Status specific styling */
+.pending { color: orange; }
+.shipped { color: blue; }
+.delivered { color: green; }
+.cancelled { color: red; }
+
+.actions {
+    white-space: nowrap; /* Prevents buttons from wrapping awkwardly */
+}
