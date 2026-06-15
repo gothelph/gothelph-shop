@@ -14,6 +14,7 @@ type Product = {
   price: number;
   type: string;
   image: string;
+  brandId?: string;
 };
 
 type ProductEditData = {
@@ -22,6 +23,7 @@ type ProductEditData = {
   price: number;
   categoryId: string | null;
   collectionId: string | null;
+  brandId: string | null;
   description: string | null;
   imageUrl: string | null;
 };
@@ -37,7 +39,13 @@ type Category = {
   name: string;
 };
 
+type Brand = {
+  id: string;
+  name: string;
+};
+
 export default function AdminProductsPage() {
+  const [brands, setBrands] = useState<Brand[]>([]);
   const router = useRouter();
   const { isAuth, roles, accessToken } = useAuthContext();
   const [products, setProducts] = useState<Product[]>([]);
@@ -54,6 +62,7 @@ export default function AdminProductsPage() {
     collectionId: "",
     description: "",
     imageUrl: "",
+    brandId: "",
   };
 
   const [form, setForm] = useState(emptyForm);
@@ -68,13 +77,15 @@ export default function AdminProductsPage() {
       fetch("/api/products").then((r) => r.json()),
       fetch("/api/collections").then((r) => r.json()),
       fetch("/api/categories").then((r) => r.json()),
-    ]).then(([productsData, collectionsData, categoriesData]) => {
+      fetch("/api/brands").then((r) => r.json()),
+    ]).then(([productsData, collectionsData, categoriesData, brandsData]) => {
       setProducts(productsData || []);
       setCollections(collectionsData.data || []);
       setCategories(categoriesData || []);
+      setBrands(brandsData || []);
       setLoading(false);
     });
-  }, [isAuth, roles, router, loading]);
+  }, [isAuth, roles, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,8 +93,17 @@ export default function AdminProductsPage() {
 
     const method = editing ? "PATCH" : "POST";
     const body = editing
-      ? { id: editing.id, ...form, price: Number(form.price) }
-      : { ...form, price: Number(form.price) };
+      ? {
+          id: editing.id,
+          ...form,
+          price: Number(form.price),
+          brandId: form.brandId || null, // 👈
+        }
+      : {
+          ...form,
+          price: Number(form.price),
+          brandId: form.brandId || null, // 👈
+        };
 
     const res = await fetch("/api/admin/products", {
       method,
@@ -129,6 +149,7 @@ export default function AdminProductsPage() {
       collectionId: "",
       description: "",
       imageUrl: product.image === "/placeholder.png" ? "" : product.image,
+      brandId: product.brandId || "",
     };
 
     setEditing(product);
@@ -150,6 +171,7 @@ export default function AdminProductsPage() {
       categoryId: data.categoryId || "",
       collectionId: data.collectionId || "",
       description: data.description || "",
+      brandId: data.brandId || "",
       imageUrl: data.imageUrl || "",
     });
   };
@@ -215,6 +237,21 @@ export default function AdminProductsPage() {
                 onChange={(e) => setForm({ ...form, price: e.target.value })}
                 required
               />
+            </label>
+
+            <label>
+              Бренд
+              <select
+                value={form.brandId}
+                onChange={(e) => setForm({ ...form, brandId: e.target.value })}
+              >
+                <option value="">Выберите бренд</option>
+                {brands.map((b) => (
+                  <option key={b.id.toString()} value={b.id.toString()}>
+                    {b.name}
+                  </option>
+                ))}
+              </select>
             </label>
 
             <label>

@@ -7,6 +7,10 @@
   padding: 2rem 1.5rem 0;
 }
 
+.btn {
+  border: none;
+}
+
 .nav {
   display: none;
   gap: 2rem;

@@ -21,6 +21,7 @@ export async function GET(request: Request) {
          p.id::text AS id,
          p.name,
          p.price,
+         p.brand_id::text AS "brandId",
          p.category_id::text AS "categoryId",
          p.description,
          pi.image_url AS "imageUrl",
@@ -69,12 +70,13 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { name, price, categoryId, description, imageUrl, collectionId } = body;
+    const { name, price, categoryId, description, imageUrl, collectionId } =
+      body;
 
     if (!name || !price) {
       return NextResponse.json(
         { error: "name and price are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -87,7 +89,7 @@ export async function POST(request: Request) {
         `INSERT INTO products (name, price, category_id, description)
          VALUES ($1, $2, $3, $4)
          RETURNING id`,
-        [name, price, categoryId || null, description || null]
+        [name, price, categoryId || null, description || null],
       );
 
       const productId = productResult.rows[0].id;
@@ -96,7 +98,7 @@ export async function POST(request: Request) {
         await client.query(
           `INSERT INTO product_images (product_id, image_url, is_main)
            VALUES ($1, $2, true)`,
-          [productId, imageUrl]
+          [productId, imageUrl],
         );
       }
 
@@ -104,7 +106,7 @@ export async function POST(request: Request) {
         await client.query(
           `INSERT INTO product_collections (product_id, collection_id)
            VALUES ($1, $2)`,
-          [productId, collectionId]
+          [productId, collectionId],
         );
       }
 
@@ -121,7 +123,7 @@ export async function POST(request: Request) {
     console.error("CREATE PRODUCT ERROR:", error);
     return NextResponse.json(
       { error: "Ошибка создания товара" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -142,6 +144,7 @@ export async function PATCH(request: Request) {
       collectionId,
       description,
       imageUrl,
+      brandId,
     } = body;
 
     if (!id || !name) {
@@ -158,10 +161,17 @@ export async function PATCH(request: Request) {
 
       const productResult = await client.query(
         `UPDATE products 
-         SET name = $1, price = $2, category_id = $3, description = $4
-         WHERE id::text = $5
+         SET name = $1, price = $2, category_id = $3, description = $4, brand_id = $5
+         WHERE id::text = $6
          RETURNING id`,
-        [name, price, categoryId || null, description || null, id],
+        [
+          name,
+          price,
+          categoryId || null,
+          description || null,
+          brandId || null,
+          id,
+        ],
       );
 
       if (productResult.rows.length === 0) {
@@ -245,7 +255,7 @@ export async function DELETE(request: Request) {
     console.error("DELETE PRODUCT ERROR:", error);
     return NextResponse.json(
       { error: "Ошибка удаления товара" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

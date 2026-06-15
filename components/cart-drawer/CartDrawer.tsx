@@ -40,7 +40,7 @@ export function CartDrawer() {
     <div className={styles.overlay} onClick={() => setIsOpen(false)}>
       <aside onClick={(e) => e.stopPropagation()} className={styles.drawer}>
         <div className={styles.header}>
-          <h2>Корзина</h2>
+          <h2 className={styles.btn}>Корзина</h2>
           <button onClick={() => setIsOpen(false)} className={styles.close}>
             &times;
           </button>

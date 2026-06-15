@@ -2,6 +2,7 @@
 
 import Header from "@/components/header/Header";
 import CollectionFilter from "@/components/collection-filter/CollectionFilter";
+import { Footer } from "@/components/footer";
 import Brands from "@/components/BrandPanel/BrandPanel";
 
 export default function CatalogPage() {
@@ -12,6 +13,7 @@ export default function CatalogPage() {
       />
       <Brands />
       <CollectionFilter />
+      <Footer topRef={undefined} />
     </div>
   );
 }

@@ -1,0 +1,28 @@
+.pageEnter {
+  animation: enter 0.8s ease-out;
+}
+
+.pageExit {
+  animation: exit 0.5s ease-in forwards;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes exit {
+  to {
+    opacity: 0;
+    transform: translateY(-20px) scale(1.02);
+    filter: blur(10px);
+  }
+}

@@ -76,6 +76,7 @@ export default function ProductCard({
             <Image
               src={imageUrl}
               alt={item.name}
+              className={styles.image}
               width={300}
               height={200}
               unoptimized
@@ -89,7 +90,9 @@ export default function ProductCard({
         <p>{item.type}</p>
         <p>{item.price} ₽</p>
 
-        <button type="button">Добавить</button>
+        <button type="button" className={styles.button}>
+          Добавить
+        </button>
 
         {isAdmin && (
           <button

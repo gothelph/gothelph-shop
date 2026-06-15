@@ -14,6 +14,7 @@ export async function GET(
         p.id,
         p.name,
         p.price,
+        p.brand_id,
         c.name AS category,
         pi.image_url AS image,
         p.description,
@@ -39,6 +40,7 @@ export async function GET(
       price: Number(row.price),
       image: row.image || "/placeholder.png",
       description: row.description || "",
+      brandId: row.brand_id,
       productVariantId: row.product_variant_id,
     };
 

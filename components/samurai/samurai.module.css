@@ -1,0 +1,71 @@
+.page {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at top, #1a1a1a, #000);
+  color: white;
+  font-family: sans-serif;
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 120px 20px 60px;
+}
+
+.hero h1 {
+  font-size: 56px;
+}
+
+.hero button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: crimson;
+  border: none;
+  color: white;
+  border-radius: 6px;
+}
+
+/* PRODUCTS */
+.products {
+  position: relative;
+  z-index: 2;
+  padding: 40px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* 3D CARD */
+.card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  transition: transform 0.15s ease;
+  transform-style: preserve-3d;
+}
+
+.card button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px;
+  background: #b30000;
+  border: none;
+  color: white;
+}
+
+.glow {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(255, 0, 0, 0.4), transparent);
+  top: -30px;
+  right: -30px;
+  filter: blur(20px);
+}

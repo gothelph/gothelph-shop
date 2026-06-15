@@ -11,6 +11,7 @@ export async function GET(request: Request) {
       SELECT
         p.id,
         p.name,
+        p.brand_id AS "brandId",
         p.price,
         c.name AS category,
         (
@@ -52,6 +53,7 @@ export async function GET(request: Request) {
       name: row.name,
       type: row.category ?? "unknown",
       price: Number(row.price),
+      brandId: row.brandId,
       image: row.image || "/placeholder.png",
     }));
 

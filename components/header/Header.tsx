@@ -35,7 +35,9 @@ export default function Header({ navItems = [] }: HeaderProps) {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger>КАТАЛОГ</NavigationMenuTrigger>
+              <NavigationMenuTrigger className="cursor-pointer">
+                КАТАЛОГ
+              </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <div className="p-3 w-[200px] text-sm">
                   <a href="/catalog" className="block py-1">
@@ -62,14 +64,27 @@ export default function Header({ navItems = [] }: HeaderProps) {
         <div className="flex items-center gap-4 text-lg">
           {!isAuth && (
             <>
-              <button onClick={() => openAuthModal("register")}>
+              <button
+                onClick={() => openAuthModal("register")}
+                className="cursor-pointer hover:opacity-70 transition"
+              >
                 РЕГИСТРАЦИЯ
               </button>
-              <button onClick={() => openAuthModal("login")}>ВХОД</button>
+              <button
+                onClick={() => openAuthModal("login")}
+                className="cursor-pointer hover:opacity-70 transition"
+              >
+                ВХОД
+              </button>
             </>
           )}
 
-          <button onClick={() => setIsOpen(true)}>КОРЗИНА ({cartCount})</button>
+          <button
+            onClick={() => setIsOpen(true)}
+            className="cursor-pointer hover:opacity-70 transition"
+          >
+            КОРЗИНА ({cartCount})
+          </button>
 
           {isAuth && (
             <>

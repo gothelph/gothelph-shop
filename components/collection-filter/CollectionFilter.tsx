@@ -7,22 +7,24 @@ import ProductCard from "@/components/productcard/productcard";
 import styles from "./collection-filter.module.css";
 import { useAuthContext } from "@/hooks/useAuthContext";
 
-type Collection = {
+interface Collection {
   id: string;
   title?: string;
   name?: string;
   description?: string;
-};
+}
 
-type Product = {
+interface Product {
   id: string;
   name: string;
   type: string;
   price: number;
   image: string;
-};
+  brandId: number | null;
+}
 
 export function CollectionFilter() {
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
   const { roles } = useAuthContext();
   const isAdmin = roles.includes("admin");
 
@@ -35,6 +37,7 @@ export function CollectionFilter() {
 
   const [collections, setCollections] = useState<Collection[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [brands, setBrands] = useState<{ id: number; name: string }[]>([]);
   const [selectedCollection, setSelectedCollection] = useState<string | null>(
     initialId || null,
   );
@@ -64,15 +67,18 @@ export function CollectionFilter() {
     Promise.all([
       fetch("/api/collections").then((r) => r.json()),
       fetch("/api/products").then((r) => r.json()),
-    ]).then(([collectionsData, productsData]) => {
+      fetch("/api/brands").then((r) => r.json()),
+    ]).then(([collectionsData, productsData, brandsData]) => {
       setCollections(collectionsData.data || []);
       setProducts(productsData || []);
+      setBrands(brandsData || []);
     });
   }, []);
 
   const handleSelectCollection = async (collectionId: string | null) => {
     setSelectedCollection(collectionId);
     setSelectedCategory(null);
+    setSelectedBrand(null);
     await fetchProducts(collectionId);
   };
 
@@ -100,9 +106,14 @@ export function CollectionFilter() {
     new Set(products.map((p) => p.type).filter(Boolean)),
   );
 
-  const filteredProducts = selectedCategory
-    ? products.filter((p) => p.type === selectedCategory)
-    : products;
+  const filteredProducts = products.filter((p) => {
+    const matchType = selectedCategory ? p.type === selectedCategory : true;
+    const matchBrand = selectedBrand
+      ? p.brandId?.toString() === selectedBrand
+      : true;
+
+    return matchType && matchBrand;
+  });
 
   return (
     <div className={styles.container}>
@@ -124,6 +135,25 @@ export function CollectionFilter() {
               {c.title || c.name}
             </Button>
           </div>
+        ))}
+      </div>
+
+      <div className={styles.buttons}>
+        <Button
+          variant={selectedBrand === null ? "default" : "outline"}
+          onClick={() => setSelectedBrand(null)}
+        >
+          Все бренды
+        </Button>
+
+        {brands.map(({ id, name }) => (
+          <Button
+            key={id}
+            variant={selectedBrand === id.toString() ? "default" : "outline"}
+            onClick={() => setSelectedBrand(id.toString())}
+          >
+            {name}
+          </Button>
         ))}
       </div>
 

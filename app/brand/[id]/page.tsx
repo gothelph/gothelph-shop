@@ -1,5 +1,6 @@
 "use client";
 
+import SamuraiLanding from "@/components/samurai/SamuraiLanding";
 import { useParams } from "next/navigation";
 
 export default function BrandPage() {
@@ -7,9 +8,7 @@ export default function BrandPage() {
 
   console.log(id);
 
-  if (id === "1") {
-    return <div style={{ background: "black", color: "white" }}>NIKE</div>;
-  }
+  if (id === "1") return <SamuraiLanding />;
 
   if (id === "2") {
     return <div style={{ background: "blue", color: "white" }}>ADIDAS</div>;
