@@ -8,8 +8,15 @@ import styles from "./cart-drawer.module.css";
 
 export function CartDrawer() {
   const router = useRouter();
-  const { items, isOpen, setIsOpen, removeItem, updateQuantity, clearCart, total } =
-    useCart();
+  const {
+    items,
+    isOpen,
+    setIsOpen,
+    removeItem,
+    updateQuantity,
+    clearCart,
+    total,
+  } = useCart();
 
   useEffect(() => {
     if (!isOpen) return;
@@ -30,14 +37,8 @@ export function CartDrawer() {
   if (!isOpen) return null;
 
   return (
-    <div
-      className={styles.overlay}
-      onClick={() => setIsOpen(false)}
-    >
-      <aside
-        onClick={(e) => e.stopPropagation()}
-        className={styles.drawer}
-      >
+    <div className={styles.overlay} onClick={() => setIsOpen(false)}>
+      <aside onClick={(e) => e.stopPropagation()} className={styles.drawer}>
         <div className={styles.header}>
           <h2>Корзина</h2>
           <button onClick={() => setIsOpen(false)} className={styles.close}>
@@ -68,13 +69,17 @@ export function CartDrawer() {
                     <p className={styles.itemPrice}>{item.price} ₽</p>
                     <div className={styles.qtyControls}>
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity - 1)
+                        }
                       >
                         -
                       </button>
                       <span>{item.quantity}</span>
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity + 1)
+                        }
                       >
                         +
                       </button>
@@ -95,7 +100,9 @@ export function CartDrawer() {
               <Button onClick={clearCart} variant="outline">
                 Очистить
               </Button>
-              <Button onClick={() => router.push("/checkout")}>Оформить заказ</Button>
+              <Button onClick={() => router.push("/checkout")}>
+                Оформить заказ
+              </Button>
             </div>
           </>
         )}

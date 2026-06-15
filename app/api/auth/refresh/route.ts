@@ -25,10 +25,10 @@ export async function POST(req: Request) {
   }
 
   const client = await pool.connect();
-  let payload: { userId: number };
+  let payload: { userId: number, login: string };
 
   try {
-    payload = verifyToken(refreshToken) as { userId: number };
+    payload = verifyToken(refreshToken) as { userId: number, login: string };
   } catch {
     client.release();
     return errorResponse({
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
     );
     const roles = rolesResult.rows[0]?.roles ?? [];
 
-    const newAccessToken = generateAccessToken(payload.userId, roles);
+    const newAccessToken = generateAccessToken(payload.userId, payload.login, roles);
 
     const newRefreshToken = generateRefreshToken(payload.userId);
     const newRefreshTokenHash = hashToken(newRefreshToken);

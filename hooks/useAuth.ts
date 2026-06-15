@@ -9,6 +9,7 @@ type AuthState = {
   roles: string[];
   userId: number | null;
   message: string;
+  userName: string;
 };
 
 type LoginPayload = { email: string; password: string };
@@ -30,9 +31,10 @@ const readStoredToken = () =>
     : window.localStorage.getItem(ACCESS_TOKEN_KEY) || "";
 
 export function useAuth(): UseAuthResult {
-  const [accessToken, setAccessToken] = useState<string>("");
+  const [accessToken, setAccessToken] = useState<string>(readStoredToken());
   const [isAuth, setIsAuth] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [userName, setUserName] = useState("");
   const [roles, setRoles] = useState<string[]>([]);
   const [userId, setUserId] = useState<number | null>(null);
   const [message, setMessage] = useState("");
@@ -48,7 +50,9 @@ export function useAuth(): UseAuthResult {
       const payload = (await res.json()) as {
         userId: number;
         roles: string[];
+        login: string;
       };
+      setUserName(payload.login);
       setIsAuth(true);
       setRoles(payload.roles || []);
       setUserId(payload.userId || null);
@@ -65,10 +69,8 @@ export function useAuth(): UseAuthResult {
   }, []);
 
   useEffect(() => {
-    const token = readStoredToken();
-    setAccessToken(token);
-    void syncSession(token);
-  }, [syncSession]);
+    void syncSession(accessToken);
+  }, [accessToken, syncSession]);
 
   const login = useCallback(
     async ({ email, password }: LoginPayload) => {
@@ -130,6 +132,7 @@ export function useAuth(): UseAuthResult {
     roles,
     userId,
     message,
+    userName,
     login,
     register,
     logout,

@@ -46,7 +46,11 @@ export default function AuthModal() {
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <h3>{displayMode === "login" ? "Вход" : "Регистрация"}</h3>
-          <button className={styles.closeBtn} onClick={closeAuthModal} type="button">
+          <button
+            className={styles.closeBtn}
+            onClick={closeAuthModal}
+            type="button"
+          >
             ×
           </button>
         </div>
@@ -55,14 +59,22 @@ export default function AuthModal() {
           <button
             className={displayMode === "login" ? styles.activeTab : styles.tab}
             type="button"
-            onClick={() => { clearMessage(); setLocalMode("login"); }}
+            onClick={() => {
+              clearMessage();
+              setLocalMode("login");
+            }}
           >
             Вход
           </button>
           <button
-            className={displayMode === "register" ? styles.activeTab : styles.tab}
+            className={
+              displayMode === "register" ? styles.activeTab : styles.tab
+            }
             type="button"
-            onClick={() => { clearMessage(); setLocalMode("register"); }}
+            onClick={() => {
+              clearMessage();
+              setLocalMode("register");
+            }}
           >
             Регистрация
           </button>
@@ -111,7 +123,7 @@ export default function AuthModal() {
                 type="password"
                 placeholder="password"
                 required
-                minLength={6}
+                minLength={8}
               />
               <button className={styles.submit} type="submit">
                 Регистрация

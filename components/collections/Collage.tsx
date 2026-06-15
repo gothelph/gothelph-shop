@@ -3,12 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Item } from "@/types/collection";
+import { useRouter } from "next/navigation";
 
-type Props = {
+interface CollageProps {
   items: Item[];
-};
+  onSelect: (id: string) => void;
+}
 
-export function Collage({ items }: Props) {
+export function Collage({ items, onSelect }: CollageProps) {
+  const router = useRouter();
   const ref = useRef<HTMLDivElement | null>(null);
   const [progress, setProgress] = useState(0);
 
@@ -45,9 +48,10 @@ export function Collage({ items }: Props) {
           const offset = (1 - progress) * 120;
 
           return (
-            <div key={item.title} className="w-full flex justify-center">
+            <div key={item.id} className="w-full flex justify-center">
               <div
                 className="relative w-[40vw] max-w-[900px] h-[300px] md:h-[420px] overflow-hidden shadow-2xl transition-transform duration-300"
+                onClick={() => router.push(`/catalog/${item.id}`)}
                 style={{
                   transform: `
                     translateX(${isLeft ? -offset : offset}px)

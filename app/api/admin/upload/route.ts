@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
+import { authenticateRequest } from "@/lib/utils/auth-guard";
 
 export async function POST(request: Request) {
+  const auth = authenticateRequest(request, ["admin"]);
+  if (!auth.ok) {
+    return auth.response;
+  }
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File;

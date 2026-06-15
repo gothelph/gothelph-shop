@@ -4,6 +4,7 @@ import { verifyToken } from "@/lib/utils/jwt";
 
 export interface AccessTokenPayload {
   userId: number;
+  login: string;
   roles: string[];
   iat?: number;
   exp?: number;

@@ -64,7 +64,8 @@ export async function POST(req: Request) {
         message: "Invalid email or password",
       });
 
-    const accessToken = generateAccessToken(user.id, user.roles);
+      console.debug("Login success:", user);
+    const accessToken = generateAccessToken(user.id, user.username, user.roles);
     const refreshToken = generateRefreshToken(user.id);
     const refreshTokenHash = hashToken(refreshToken);
     const userAgent = req.headers.get("user-agent");

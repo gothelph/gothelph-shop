@@ -9,7 +9,7 @@ export function useCollections() {
     const load = async () => {
       try {
         const res = await fetch("/api/collections");
-        const data = await res.json();
+        const data: { data: Collection[] } = await res.json();
 
         if (!res.ok) {
           setError(data.error || "Ошибка загрузки");

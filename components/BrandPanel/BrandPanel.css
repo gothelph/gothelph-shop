@@ -1,0 +1,23 @@
+.brands-container {
+  display: flex;
+  justify-content: center; /* по центру */
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+
+.brand-button {
+  padding: 10px 18px;
+  background-color: black;
+  color: white;
+  border: 1px solid black;
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.brand-button:hover {
+  background-color: white;
+  color: black;
+  transform: scale(1.08);
+}

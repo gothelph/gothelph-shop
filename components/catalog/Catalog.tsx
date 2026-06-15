@@ -21,7 +21,7 @@ export function Categories() {
       .catch((err) => console.error(err));
   }, []);
 
-return (
+  return (
     <div>
       <Header navItems={[]} />
     </div>

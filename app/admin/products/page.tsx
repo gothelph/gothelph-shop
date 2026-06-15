@@ -6,6 +6,7 @@ import Header from "@/components/header/Header";
 import { Button } from "@/components/ui/button";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import styles from "./admin-products.module.css";
+import AdminMenu from "@/components/AdminMenu/AdminMenu";
 
 type Product = {
   id: string;
@@ -73,7 +74,7 @@ export default function AdminProductsPage() {
       setCategories(categoriesData || []);
       setLoading(false);
     });
-  }, [isAuth, roles, router]);
+  }, [isAuth, roles, router, loading]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,7 +105,6 @@ export default function AdminProductsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!accessToken) return;
     if (!confirm("Удалить товар?")) return;
 
     const res = await fetch("/api/admin/products", {
@@ -122,8 +122,6 @@ export default function AdminProductsPage() {
   };
 
   const handleEdit = async (product: Product) => {
-    if (!accessToken) return;
-
     const fallbackForm = {
       name: product.name,
       price: String(product.price),
@@ -160,8 +158,12 @@ export default function AdminProductsPage() {
     return (
       <div>
         <Header
-          navItems={[{ href: "/", label: "ГЛАВНАЯ", className: "text-lg" }]}
+          navItems={[
+            { href: "/", label: "ГЛАВНАЯ", className: "text-lg" },
+            { href: "/catalog", label: "КОЛЛЕКЦИИ", className: "text-lg" },
+          ]}
         />
+        <AdminMenu />
         <div className={styles.container}>Загрузка...</div>
       </div>
     );
@@ -175,6 +177,7 @@ export default function AdminProductsPage() {
           { href: "/catalog", label: "КОЛЛЕКЦИИ", className: "text-lg" },
         ]}
       />
+      <AdminMenu />
 
       <div className={styles.container}>
         <div className={styles.header}>

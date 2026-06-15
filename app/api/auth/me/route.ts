@@ -10,5 +10,6 @@ export async function GET(req: Request) {
   return okResponse({
     userId: auth.user.userId,
     roles: auth.user.roles ?? [],
+    login: auth.user.login,
   });
 }

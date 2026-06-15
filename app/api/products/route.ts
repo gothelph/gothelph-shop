@@ -8,15 +8,15 @@ export async function GET(request: Request) {
 
   try {
     let query = `
-      SELECT 
+      SELECT
         p.id,
         p.name,
         p.price,
         c.name AS category,
         (
-          SELECT pi.image_url 
-          FROM product_images pi 
-          WHERE pi.product_id = p.id AND pi.is_main = true 
+          SELECT pi.image_url
+          FROM product_images pi
+          WHERE pi.product_id = p.id AND pi.is_main = true
           LIMIT 1
         ) AS image
       FROM products p

@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
+import { useRef, useState } from "react";
+
 import Header from "@/components/header/Header";
 import Collections from "@/components/collections/Collections";
 import { useCollections } from "@/hooks/useCollections";
@@ -9,9 +10,18 @@ import { ParallaxHero } from "@/components/paralax";
 import { Cover } from "@/components/cover";
 import { Collage } from "@/components/collections/Collage";
 import { Footer } from "@/components/footer";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const { collections, error: collectionsError, reload } = useCollections();
+  const [selectedCollectionId, setSelectedCollectionId] = useState<
+    string | null
+  >(null);
+  const topRef = useRef<HTMLDivElement>(null);
+  const activeCollections = selectedCollectionId
+    ? collections.filter((c) => c.id === selectedCollectionId)
+    : collections;
 
   const collageItems = collections.map((collection) => {
     const image = collection.subcollections?.[0]?.items?.[0]?.image || null;
@@ -25,7 +35,8 @@ export default function Home() {
 
   return (
     <div>
-      <div className="h-100vh flex flex-col justify-between">
+      {/* TOP SECTION */}
+      <div className="h-100vh flex flex-col justify-between" ref={topRef}>
         <Header
           navItems={[
             { href: "#catalog", label: "КОЛЛЕКЦИИ", className: "text-lg" },
@@ -36,17 +47,28 @@ export default function Home() {
         <Cover />
         <ParallaxHero />
       </div>
+
+      {/* CAROUSEL */}
       <CategoriesCarousel
         categories={[
           { name: "Аксессуары", image: "/orig.jpg" },
-          { name: "Одежда", image: "/одежда.png" },
+          { name: "Одежда", image: "/12.png" },
           { name: "Игрушки", image: "/cat.jpg" },
         ]}
-        onSelect={(cat) => console.log(cat)}
+        onSelect={(cat) => {
+          router.push(`/catalog?category=${cat}`);
+        }}
       />
 
-      <Collage items={collageItems} />
+      {/* COLLAGE */}
+      <div id="catalog">
+        <Collage
+          items={collageItems}
+          onSelect={(id: string) => setSelectedCollectionId(id)}
+        />
+      </div>
 
+      {/* ERROR */}
       {collectionsError && (
         <p
           style={{
@@ -60,14 +82,18 @@ export default function Home() {
         </p>
       )}
 
+      {/* COLLECTIONS */}
       <Collections
-        data={collections}
+        data={activeCollections}
         isAdmin={false}
         accessToken={""}
         onReload={reload}
       />
 
-      <Footer />
+      {/* FOOTER */}
+      <div id="contacts">
+        <Footer topRef={topRef} />
+      </div>
     </div>
   );
 }

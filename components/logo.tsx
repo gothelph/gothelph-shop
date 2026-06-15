@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
+
 
 export function Logo() {
   const [scrolled, setScrolled] = useState(false);
@@ -24,31 +26,22 @@ export function Logo() {
   return (
     <>
       <div
-        className={`
-        left-1/2 -translate-x-1/2 transition-all duration-300
-        ${
-          isHome
-            ? scrolled
-              ? "fixed top-12"
-              : "absolute mt-[150px]"
-            : "fixed top-4"
-        }
-      `}
+        className={`left-1/2 -translate-x-1/2 transition-all duration-300 ${ scrolled || !isHome ? "fixed top-12" : "absolute mt-[150px]" } `}
       >
-        {!scrolled && (
-          <img
-            src="/logo.jpg"
-            alt="логотип"
-            className={`h-[150px] justify-self-center mb-[20px] transition-all duration-300 ${isHome && scrolled ? "opacity-0 h-0 mb-0" : "opacity-100"}`}
-          />
+        {!scrolled && isHome && (
+          <div className={`flex justify-center mb-[20px] transition-all duration-300 ${isHome && scrolled ? "opacity-0 h-0 mb-0" : "opacity-100"}`} >
+            <Image
+              height={150}
+              width={105}
+              src="/logo.jpg"
+              alt="логотип"
+            />
+          </div>
         )}
 
         <Link
           href="/"
-          className={`
-            
-          font-bold transition-all duration-300
-          ${isHome ? (scrolled ? "text-lg" : "text-8xl font-thin") : "text-lg"}
+          className={`font-bold transition-all duration-300 ${scrolled || !isHome ? "text-lg" : "text-8xl font-thin"}
         `}
         >
           GOTHELPH

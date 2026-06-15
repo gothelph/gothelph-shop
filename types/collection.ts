@@ -1,10 +1,10 @@
 export type Item = {
+  id: string;
   title: string;
   type?: string;
   price?: number;
   image: string | null;
 };
-
 export type Subcollection = {
   id: string;
   title: string;

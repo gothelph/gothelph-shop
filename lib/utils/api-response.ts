@@ -7,7 +7,11 @@ export type ApiErrorCode =
   | "AUTH_TOKEN_INVALID"
   | "AUTH_FORBIDDEN"
   | "REGISTRATION_FAILED"
-  | "INTERNAL_ERROR";
+  | "INTERNAL_ERROR"
+  | "INVALID_USER_ID"
+  | "USER_NOT_FOUND"
+  | "ROLE_NOT_FOUND"
+  | "INVALID_ROLE";
 
 interface ErrorResponseOptions {
   status: number;

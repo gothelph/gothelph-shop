@@ -59,7 +59,6 @@ async function getTableMeta(tableName: string): Promise<TableMeta> {
 
 function mapRowsToCollections(rows: DbRow[]): Collection[] {
   const collections = new Map<string, Collection>();
-  console.debug(rows, "TEST");
 
   for (const row of rows) {
     if (!collections.has(row.collection_id)) {

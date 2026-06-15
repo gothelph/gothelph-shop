@@ -7,6 +7,7 @@ export type CartItem = {
   price: number;
   image: string;
   quantity: number;
+  productVariantId: string;
 };
 
 type CartContextType = {
@@ -29,9 +30,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const saved = localStorage.getItem("cart");
     if (saved) {
+      const parsed = JSON.parse(saved);
       try {
-        setItems(JSON.parse(saved));
-      } catch {}
+        setItems(parsed);
+      } catch { }
     }
   }, []);
 

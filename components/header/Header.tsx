@@ -10,14 +10,15 @@ import {
 import { useCart } from "@/hooks/useCart";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { Logo } from "../logo";
+import Link from "next/link";
 
-type Props = {
+interface HeaderProps {
   navItems?: { href: string; label: string; className: string }[];
-};
+}
 
-export default function Header({ navItems = [] }: Props) {
+export default function Header({ navItems = [] }: HeaderProps) {
   const { items, setIsOpen } = useCart();
-  const { isAuth, roles, logout, openAuthModal } = useAuthContext();
+  const { isAuth, roles, logout, openAuthModal, userName } = useAuthContext();
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const isAdmin = roles.includes("admin");
 
@@ -56,7 +57,6 @@ export default function Header({ navItems = [] }: Props) {
             ))}
           </NavigationMenuList>
         </NavigationMenu>
-
         <Logo />
 
         <div className="flex items-center gap-4 text-lg">
@@ -73,14 +73,12 @@ export default function Header({ navItems = [] }: Props) {
 
           {isAuth && (
             <>
-              <button onClick={logout}>выйти</button>
-              <span className="text-xs">
-                {isAdmin ? "АДМИН" : "ПОЛЬЗОВАТЕЛЬ"}
-              </span>
+              <button onClick={logout}>ВЫЙТИ</button>
+              <span className="text-lg">{isAdmin ? "АДМИН" : userName}</span>
               {isAdmin && (
-                <a href="/admin/products" className="text-xs">
+                <Link href="/admin/users" className="text-lg">
                   УПРАВЛЕНИЕ
-                </a>
+                </Link>
               )}
             </>
           )}
