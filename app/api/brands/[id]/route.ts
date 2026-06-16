@@ -16,12 +16,10 @@ export async function GET(
         p.price,
         b.name AS brands,
         pi.image_url AS image,
-        p.description,
-        pv.id AS product_variant_id
+        p.description
       FROM products p
       LEFT JOIN brands b ON b.id = p.brand_id
       LEFT JOIN product_images pi ON pi.product_id = p.id AND pi.is_main = true
-      LEFT JOIN product_variants pv ON pv.product_id = p.id
       WHERE b.id::text = $1
     `,
       [id],
@@ -31,18 +29,18 @@ export async function GET(
       return NextResponse.json({ error: "Товар не найден" }, { status: 404 });
     }
 
-    const row = result.rows[0];
-    const item = {
-      id: String(row.id),
-      name: row.name,
-      type: row.category ?? "unknown",
-      price: Number(row.price),
-      image: row.image || "/placeholder.png",
-      description: row.description || "",
-      productVariantId: row.product_variant_id,
-    };
+    // const row = result.rows[0];
+    // const item = {
+    //   id: String(row.id),
+    //   name: row.name,
+    //   type: row.category ?? "unknown",
+    //   price: Number(row.price),
+    //   image: row.image || "/placeholder.png",
+    //   description: row.description || "",
+    //   productVariantId: row.product_variant_id,
+    // };
 
-    return NextResponse.json(item);
+    return NextResponse.json(result.rows);
   } catch (error) {
     console.error("PRODUCT API ERROR:", error);
 

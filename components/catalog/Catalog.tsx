@@ -13,7 +13,7 @@ export function Categories() {
   const [collections, setCollection] = useState<Collection[]>([]);
 
   useEffect(() => {
-    fetch("http://172.18.0.1:3000/api/collections")
+    fetch("http://localhost:3000/catalog")
       .then((res) => res.json())
       .then((data) => {
         setCollection(data.data);

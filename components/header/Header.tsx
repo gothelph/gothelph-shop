@@ -11,12 +11,14 @@ import { useCart } from "@/hooks/useCart";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { Logo } from "../logo";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface HeaderProps {
   navItems?: { href: string; label: string; className: string }[];
 }
 
 export default function Header({ navItems = [] }: HeaderProps) {
+  const router = useRouter();
   const { items, setIsOpen } = useCart();
   const { isAuth, roles, logout, openAuthModal, userName } = useAuthContext();
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -88,10 +90,23 @@ export default function Header({ navItems = [] }: HeaderProps) {
 
           {isAuth && (
             <>
-              <button onClick={logout}>ВЫЙТИ</button>
-              <span className="text-lg">{isAdmin ? "АДМИН" : userName}</span>
+              <button
+                onClick={logout}
+                className="text-lg cursor-pointer hover:opacity-70 transition"
+              >
+                ВЫЙТИ
+              </button>
+              <span
+                onClick={() => router.push("/profile")}
+                className="text-lg cursor-pointer hover:opacity-70 transition"
+              >
+                {isAdmin ? "АДМИН" : userName}
+              </span>
               {isAdmin && (
-                <Link href="/admin/users" className="text-lg">
+                <Link
+                  href="/admin/users"
+                  className="text-lg cursor-pointer hover:opacity-70 transition"
+                >
                   УПРАВЛЕНИЕ
                 </Link>
               )}

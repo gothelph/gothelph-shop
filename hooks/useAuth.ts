@@ -78,7 +78,7 @@ export function useAuth(): UseAuthResult {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ login: email, password }),
       });
       const payload: LoginResponse = await res.json();
 

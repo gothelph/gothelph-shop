@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import pool from "@/lib/db";
 import { errorResponse, okResponse } from "@/lib/utils/api-response";
 import { setRefreshTokenCookie } from "@/lib/utils/auth-cookies";
-import { validateLoginPayload } from "@/lib/utils/auth-validation";
 import { generateAccessToken, generateRefreshToken } from "@/lib/utils/jwt";
 import { hashToken } from "@/lib/utils/token-hash";
 
@@ -21,18 +20,18 @@ export interface LoginResponse {
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const parsed = validateLoginPayload(body);
+  // const parsed = validateLoginPayload(body);
 
-  if (!parsed.valid) {
-    return errorResponse({
-      status: 400,
-      code: "VALIDATION_ERROR",
-      message: "Invalid login payload",
-      details: parsed.details,
-    });
-  }
+  // if (!parsed.valid) {
+  //   return errorResponse({
+  //     status: 400,
+  //     code: "VALIDATION_ERROR",
+  //     message: "Invalid login payload",
+  //     details: parsed.details,
+  //   });
+  // }
 
-  const { email, password } = parsed.data;
+  const { login, password } = body;
 
   try {
     const res = await pool.query(
@@ -44,16 +43,16 @@ export async function POST(req: Request) {
        FROM gothelph.users u
        LEFT JOIN gothelph.user_roles ur ON ur.user_id = u.id
        LEFT JOIN gothelph.roles r ON r.id = ur.role_id
-       WHERE u.email = $1
+       WHERE u.email = $1 or u.phone = $1
        GROUP BY u.id`,
-      [email],
+      [login],
     );
     const user = res.rows[0];
     if (!user)
       return errorResponse({
         status: 401,
         code: "AUTH_INVALID_CREDENTIALS",
-        message: "Invalid email or password",
+        message: "Invalid login or password",
       });
 
     const valid = await bcrypt.compare(password, user.password_hash);
@@ -61,10 +60,10 @@ export async function POST(req: Request) {
       return errorResponse({
         status: 401,
         code: "AUTH_INVALID_CREDENTIALS",
-        message: "Invalid email or password",
+        message: "Invalid login or password",
       });
 
-      console.debug("Login success:", user);
+    console.debug("Login success:", user);
     const accessToken = generateAccessToken(user.id, user.username, user.roles);
     const refreshToken = generateRefreshToken(user.id);
     const refreshTokenHash = hashToken(refreshToken);

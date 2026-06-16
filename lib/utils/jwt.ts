@@ -6,8 +6,12 @@ if (!process.env.JWT_SECRET) {
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-export const generateAccessToken = (userId: number, login: string, roles: string[]) => {
-  return jwt.sign({ userId, login, roles }, JWT_SECRET, { expiresIn: "15m" });
+export const generateAccessToken = (
+  userId: number,
+  login: string,
+  roles: string[],
+) => {
+  return jwt.sign({ userId, login, roles }, JWT_SECRET, { expiresIn: "1d" });
 };
 
 export const generateRefreshToken = (userId: number) => {

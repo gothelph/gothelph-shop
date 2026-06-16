@@ -1,0 +1,128 @@
+.page {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #0a0a0f, #000);
+  color: #c7a6ff;
+  font-family: serif;
+}
+
+.hero {
+  text-align: center;
+  padding: 120px 20px;
+}
+
+.hero h1 {
+  font-size: 64px;
+  letter-spacing: 4px;
+}
+
+.products {
+  padding: 40px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.btn {
+  cursor: pointer;
+  color: #000;
+  background-color: #b28cff;
+  justify-self: center;
+  display: block;
+  margin: 40px auto;
+  width: 200px;
+  height: 50px;
+  transition: all 0.25s ease;
+}
+
+.btn:hover {
+  background-color: rgba(180, 120, 255, 0.2);
+  color: #fff;
+
+  transform: translateY(-2px); /* лёгкий подъём */
+  box-shadow: 0 8px 20px rgba(178, 140, 255, 0.3);
+  background-color: rgba(180, 120, 255, 0.2);
+  color: #fff;
+
+  transform: translateY(-2px); /* лёгкий подъём */
+  box-shadow: 0 8px 20px rgba(178, 140, 255, 0.3);
+}
+.card {
+  background: rgba(120, 80, 180, 0.08);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(180, 120, 255, 0.2);
+}
+
+.imageWrap {
+  position: relative;
+  height: 400px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.footer {
+  text-align: center;
+  padding: 60px;
+  opacity: 0.6;
+}
+
+.nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 20px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.nav a {
+  color: rgba(199, 166, 255, 0.7);
+  text-decoration: none;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.nav a:hover {
+  color: #b28cff;
+}
+
+.about {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: radial-gradient(circle at top, #0a0812, #000);
+}
+
+.aboutInner {
+  max-width: 700px;
+  text-align: center;
+  color: #c7a6ff;
+}
+
+.about h2 {
+  font-size: 42px;
+  margin-bottom: 20px;
+}
+
+.about p {
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+.contacts {
+  padding: 100px 20px;
+  text-align: center;
+  color: #b28cff;
+}
